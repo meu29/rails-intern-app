@@ -1,0 +1,28 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+  </head>
+  <body>
+    <header>
+      <p>勤怠管理システム</p>
+    </header>
+    <main>
+      <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
+        <tr>
+          <th>社員番号</th>
+          <th>氏名</th>
+          <th>状態</th>
+          <th></th>
+        </tr>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user["user_id"] %></td>
+            <td><%= user["name"] %></td>
+            <td>承認依頼</td>
+            <td><%= link_to("報告を確認する", "report/" + user["user_id"]) %></td>
+          </tr>
+        <% end %>
+      </table>
+    </main>
+  </body>
+</html>

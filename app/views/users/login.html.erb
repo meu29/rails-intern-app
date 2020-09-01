@@ -1,0 +1,18 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+  </head>
+  <body>
+    <header>
+      <p>勤怠管理システム</p>
+    </header>
+    <main>
+      <p><%= @message %></p>
+      <form action="/login" method="post">
+        <p><input name="user_id" type="text" placeholder="ユーザーID"></p>
+        <p><input name="password" type="text" placeholder="パスワード"></p>
+        <input type="submit" value="ログイン">
+      </form>
+    </main>
+  </body>
+</html>

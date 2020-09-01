@@ -1,0 +1,18 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+  </head>
+  <body>
+    <header>
+      <p>勤怠管理システム</p>
+    </header>
+    <main>
+      <p><%= @user_name %></p>
+      <p><%= @department_name %></p>
+      <%= form_tag("/users") do %>
+        <%= select_tag "date", options_for_select(@date_array) %>
+        <input type="submit" value="検索">
+      <% end %>
+    </main>
+  </body>
+</html>
