@@ -25,14 +25,13 @@ class UsersController < ApplicationController
 
     def openSelectPeriodScreen
         
-        session[:user_data] = "まんち"
+        #ページ遷移時にセッションが消える 
+        session[:user_data] = User.getUserData("H184100001", "dvbs72bk")
         user_data = session[:user_data]
-        @user_name = user_data
-        #@department_name = user_data["department_name"]
-        #@maneger_flag = user_data["user_id"] == user_data["manager_user_id"]
-        @maneger_flag = true
-        #@department_name = user_data[4] #session[:department_name]
-        
+        @user_name = user_data["user_name"]
+        @department_name = user_data["department_name"]
+        @maneger_flag = user_data["user_id"] == user_data["manager_user_id"]
+
         @date_array = []
         today = Date.today
 
@@ -59,8 +58,8 @@ class UsersController < ApplicationController
 
     def getUsers
 
-        @date = params[:date]
         @user_id = params[:user_data]
+        @date = params[:date]
         @users = User.getNormalUsersData("H184100001", @date)
         
         render "users"

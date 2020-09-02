@@ -6,15 +6,19 @@ class ReportsController < ApplicationController
 
   def openReportEditScreen
     
-    @end_of_month_date = Date.new(Time.now.year, Time.now.month, -1).day
+    @user_id = params[:user_id]
+    @date = params[:date]
+    Report.createItem(@user_id, @date)
+
     render "reportEdit"
 
   end
 
   def updateState
 
-    operation = params[:operation];
-    user_id = params[:user_id]
+    operation = params[:operation]
+    @user_id = params[:user_id]
+    @date = params[:date]
     
     if operation == "承認" 
       Report.updateItem(user_id, "承認済み", date)

@@ -24,24 +24,34 @@
           <th>17:00</th>
           <th>01:30</th>
           <th>04:00</th>
-          <th><input type="checkbox"></th>
+          <th><input class="manager_check" type="checkbox"></th>
         </td>
       </table>
-      <%= @id %>
+      <p><%= @operation %></p>
       <div>
-        <form action="/report/H184100002" method="post">
-          <input name="operation" type="hidden" value="承認">
-          <input type="submit" value="承認">
-        </form>
-        <form action="/report/H184100002" method="post">
-          <input name="operation" type="hidden" value="差し戻し">
-      　  <input type="submit" value="差し戻し">
-        </form>
-        <form action="/report/H184100002" method="post">
-          <input name="operation" type="hidden" value="キャンセル">
-          <input type="submit" value="キャンセル">
-        </form>
+        <%= form_tag("/report/" + @user_id + "/" + @date) do %>
+          <%= hidden_field :operation, :value => "承認" %>
+          <%= submit_tag "承認" %>
+        <% end %>
+        <%= form_tag("/report/" + @user_id + "/" + @date) do %>
+          <%= hidden_field :operation, :value => "差し戻し" %>
+          <%= submit_tag "差し戻し" %>
+        <% end %>
+        <%= form_tag("/report/" + @user_id + "/" + @date) do %>
+          <%= hidden_field :operation, :value => "キャンセル" %>
+          <%= submit_tag "キャンセル" %>
+        <% end %>
       </div>
     </main>
+    <script>
+      function check() {
+        var checkbox = document.getElementsByClassName("manager_check");
+        for (var i = 0; i <= checkbox.length - 1; i++) {
+          if (checkbox[i].checked == false) {
+            alert("error");
+          }
+        }
+      }
+    </script>
   </body>
 </html>
