@@ -1,4 +1,3 @@
-#require("/home/meu/ドキュメント/RailsInternApp/app/models/user.rb")
 #データベース.テーブル => sample_development.Users
 require("date")
 
@@ -18,19 +17,21 @@ class UsersController < ApplicationController
             @message = "ユーザーIDかパスワードが間違っています"
             render "login"
         else
-            session[:user_id] = user_data[0]
-            session[:user_name] = user_data[1]
-            session[:password] = user_data[2]
+            session[:user_data] = user_data
             redirect_to "/selectPeriod"
         end 
     
     end
 
     def openSelectPeriodScreen
- 
-        user_data = User.getUserData("H184100001", "dvbs72bk")
-        @user_name = user_data[1]#session[:user_name]
-        @department_name = user_data[4] #session[:department_name]
+        
+        session[:user_data] = "まんち"
+        user_data = session[:user_data]
+        @user_name = user_data
+        #@department_name = user_data["department_name"]
+        #@maneger_flag = user_data["user_id"] == user_data["manager_user_id"]
+        @maneger_flag = true
+        #@department_name = user_data[4] #session[:department_name]
         
         @date_array = []
         today = Date.today
@@ -39,6 +40,9 @@ class UsersController < ApplicationController
             date = today << i
             year = date.year.to_s
             month = date.month.to_s
+            if month.length == 1
+              month = "0" + month
+            end
             @date_array.push([year + "年" + month + "日", year + "-" + month])
         end
 
@@ -54,9 +58,13 @@ class UsersController < ApplicationController
     '''
 
     def getUsers
+
         @date = params[:date]
-        @users = User.getNormalUsersData("H184100001")
+        @user_id = params[:user_data]
+        @users = User.getNormalUsersData("H184100001", @date)
+        
         render "users"
+
     end
 
 end

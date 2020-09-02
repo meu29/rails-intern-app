@@ -7,6 +7,7 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
+      <p><%= @date %></p>
       <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
         <tr>
           <th>社員番号</th>
@@ -18,7 +19,7 @@
           <tr>
             <td><%= user["user_id"] %></td>
             <td><%= user["name"] %></td>
-            <td>承認依頼</td>
+            <td><%= user["state"] %></td>
             <td><%= link_to("報告を確認する", "report/" + user["user_id"]) %></td>
           </tr>
         <% end %>

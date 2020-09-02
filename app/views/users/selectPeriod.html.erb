@@ -9,9 +9,17 @@
     <main>
       <p><%= @user_name %></p>
       <p><%= @department_name %></p>
-      <%= form_tag("/users") do %>
-        <%= select_tag "date", options_for_select(@date_array) %>
-        <input type="submit" value="検索">
+      <p><%= @message %></p>
+      <% if @maneger_flag == true %>
+        <%= form_tag("/users") do %>
+          <%= select_tag "date", options_for_select(@date_array) %>
+          <input type="submit" value="検索">
+        <% end %>
+      <% else %>
+        <%= form_tag("/xxx") do %>
+          <%= select_tag "date", options_for_select(@date_array) %>
+          <input type="submit" value="検索">
+        <% end %>
       <% end %>
     </main>
   </body>
