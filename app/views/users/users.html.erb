@@ -20,7 +20,7 @@
             <td><%= user["user_id"] %></td>
             <td><%= user["name"] %></td>
             <td><%= user["state"] %></td>
-            <td><%= link_to("報告を確認する", "report/" + user["user_id"] + "/" + @date) %></td>
+            <td><%= link_to("報告を確認する", "report/" + user["user_id"] + "/" + @period) %></td>
           </tr>
         <% end %>
       </table>

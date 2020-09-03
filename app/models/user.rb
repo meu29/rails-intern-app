@@ -22,20 +22,18 @@ class User < ApplicationRecord
     end
 
     #一般社員一覧を取得
-    #user_idとmanager_user_idが同じ -> そのuser_idの人はマネージャー
-    def self.getNormalUsersData(manager_user_id, date)
+    def self.getNormalUsersData(manager_user_id, period)
 
       query = <<-EOS
         select Users.id as user_id, Users.name, States.state from Users
           inner join (Belongs inner join States on Belongs.user_id = States.user_id)
           on Belongs.user_id = Users.id
-          where Belongs.user_id != (:manager_user_id) and Belongs.manager_user_id = (:manager_user_id) and States.date = (:date)
+          where Belongs.user_id != (:manager_user_id) and Belongs.manager_user_id = (:manager_user_id) and States.period = (:period)
       EOS
 
-      sql = ActiveRecord::Base.sanitize_sql_array([query, manager_user_id: manager_user_id, date: date])
-      data = ActiveRecord::Base.connection.select_all(sql)
+      sql = ActiveRecord::Base.sanitize_sql_array([query, manager_user_id: manager_user_id, period: period])
       
-      return data.to_a
+      return ActiveRecord::Base.connection.select_all(sql).to_a
 
     end
 

@@ -3,10 +3,19 @@ require("date")
 
 class UsersController < ApplicationController
 
-    protect_from_forgery 
+    protect_from_forgery with: :null_session
 
     def openLoginScreen
-        render "login"
+
+        if session[:user_data] == nil
+            render "login"
+        elsif params[:logout] != nil
+            session[:user_data] = nil
+            render "login"
+        else
+            redirect_to controller: "users", action: "openSelectPeriodScreen"
+        end
+
     end
 
     def login
@@ -17,21 +26,30 @@ class UsersController < ApplicationController
             @message = "ユーザーIDかパスワードが間違っています"
             render "login"
         else
-            session[:user_data] = user_data
-            redirect_to "/selectPeriod"
+            #セッションの保存はリダイレクト先でないとできない
+            redirect_to controller: "users", action: "openSelectPeriodScreen", user_data: user_data
         end 
     
     end
 
+    def logout 
+
+        redirect_to controller: "users", action: "openLoginScreen", logout: true
+
+    end
+
     def openSelectPeriodScreen
         
-        #ページ遷移時にセッションが消える 
-        session[:user_data] = User.getUserData("H184100001", "dvbs72bk")
-        user_data = session[:user_data]
-        @user_name = user_data["user_name"]
-        @department_name = user_data["department_name"]
-        @maneger_flag = user_data["user_id"] == user_data["manager_user_id"]
+        if session["user_data"] == nil
+          session[:user_data] = params[:user_data]
+        end
 
+        @user_id = session[:user_data]["user_id"]
+        @user_name = session[:user_data]["user_name"]
+        @department_name = session[:user_data]["department_name"]
+        @maneger_flag = session[:user_data]["user_id"] == session[:user_data]["manager_user_id"]
+
+        @period = "1999-09"
         @date_array = []
         today = Date.today
 
@@ -48,19 +66,12 @@ class UsersController < ApplicationController
         render "selectPeriod"
 
     end
-    '''
-    def getReports
-        @tweet = Users.new
-        render template: "new/index"
-        #render html: params[:user_name]
-    end
-    '''
 
     def getUsers
 
         @user_id = params[:user_data]
-        @date = params[:date]
-        @users = User.getNormalUsersData("H184100001", @date)
+        @period = params[:period]
+        @users = User.getNormalUsersData("H184100001", @period)
         
         render "users"
 

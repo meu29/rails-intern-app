@@ -7,20 +7,22 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
-      <p><%= @user_name %></p>
-      <p><%= @department_name %></p>
-      <p><%= @message %></p>
+      <p>氏名: <%= @user_name %></p>
+      <p>所属: <%= @department_name %></p>
       <% if @maneger_flag == true %>
-        <%= form_tag("/users") do %>
-          <%= select_tag "date", options_for_select(@date_array) %>
+        <%= form_tag("/users", method: :get) do %>
+          <%= select_tag "period", options_for_select(@date_array) %>
           <input type="submit" value="検索">
         <% end %>
       <% else %>
-        <%= form_tag("/xxx") do %>
-          <%= select_tag "date", options_for_select(@date_array) %>
+        <%= form_tag("/report/" + @user_id + "/" + @period, method: :get) do %>
+          <%= select_tag "period", options_for_select(@date_array) %>
           <input type="submit" value="検索">
         <% end %>
       <% end %>
+      <form action="/logout" method="post">
+        <input type="submit" value="ログアウト">
+      </form>
     </main>
   </body>
 </html>

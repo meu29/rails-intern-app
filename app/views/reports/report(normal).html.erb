@@ -15,7 +15,6 @@
           <th>終了時刻</th>
           <th>休憩時間</th>
           <th>稼働時間</th>
-          <th>チェック</th>
         </tr>
         <td>
         　<th>8/31</th>
@@ -24,20 +23,18 @@
           <th>17:00</th>
           <th>01:30</th>
           <th>04:00</th>
-          <th><input class="manager_check" type="checkbox"></th>
         </td>
       </table>
-      <p><%= @operation %></p>
       <div>
-        <%= form_tag("/report/" + @user_id + "/" + @date) do %>
-          <%= hidden_field :operation, :value => "承認" %>
-          <%= submit_tag "承認" %>
+        <%= form_tag("/report/" + @user_id + "/" + @period) do %>
+          <%= hidden_field :operation, :value => "承認依頼" %>
+          <%= submit_tag "承認依頼" %>
         <% end %>
-        <%= form_tag("/report/" + @user_id + "/" + @date) do %>
-          <%= hidden_field :operation, :value => "差し戻し" %>
-          <%= submit_tag "差し戻し" %>
+        <%= form_tag("/report/" + @user_id + "/" + @period) do %>
+          <%= hidden_field :operation, :value => "保存" %>
+          <%= submit_tag "保存" %>
         <% end %>
-        <%= form_tag("/report/" + @user_id + "/" + @date) do %>
+        <%= form_tag("/report/" + @user_id + "/" + @period) do %>
           <%= hidden_field :operation, :value => "キャンセル" %>
           <%= submit_tag "キャンセル" %>
         <% end %>
