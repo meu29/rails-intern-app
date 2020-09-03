@@ -3,14 +3,17 @@ class Report < ApplicationRecord
 
   def self.createItem(user_id, period)
 
-    query = <<-EOS
-      insert into Reports (user_id, period, start_time, finish_time, break_time, manager_check)
-        VALUES ((:user_id), (:period), null, null, null, 0)
-    EOS
+    self.table_name = "Reports"
 
-    sql = ActiveRecord::Base.sanitize_sql_array([query, user_id: user_id, period: period])
-    
-    return ActiveRecord::Base.connection.execute(sql)
+    splited_period = period.split("-")
+    end_of_month_date = Date.new(splited_period[0].to_i, splited_period[1].to_i, -1).day
+    set_data_array = []
+  
+    (1..end_of_month_date).each do |d|
+      set_data_array.push({"user_id": user_id, "period": period, "date": d, "start_time": nil, "finish_time": nil, "break_time": nil, "manager_check": "false"})
+    end
+
+    return Report.import(set_data_array)
 
   end
 

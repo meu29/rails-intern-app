@@ -8,7 +8,7 @@ class ReportsController < ApplicationController
     
     @user_id = params[:user_id]
     @period = "1999-01" #params[:date]
-    Report.createItem(@user_id, @period)
+    @message = Report.createItem(@user_id, @period)
     #@message = Report.getItem(@user_id)
 
     if session[:user_data]["user_id"] == session[:user_data]["manager_user_id"]

@@ -57,9 +57,6 @@ class UsersController < ApplicationController
             date = today << i
             year = date.year.to_s
             month = date.month.to_s
-            if month.length == 1
-              month = "0" + month
-            end
             @date_array.push([year + "年" + month + "日", year + "-" + month])
         end
 
