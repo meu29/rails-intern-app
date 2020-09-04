@@ -3,14 +3,11 @@ require("date")
 
 class UsersController < ApplicationController
 
-    protect_from_forgery with: :null_session
+    protect_from_forgery
 
     def openLoginScreen
 
         if session[:user_data] == nil
-            render "login"
-        elsif params[:logout] != nil
-            session[:user_data] = nil
             render "login"
         else
             redirect_to controller: "users", action: "openSelectPeriodScreen"
@@ -27,6 +24,7 @@ class UsersController < ApplicationController
             render "login"
         else
             #セッションの保存はリダイレクト先でないとできない
+            #redirect_to controller: "sessions", action: "createSessions", user_data: user_data
             redirect_to controller: "users", action: "openSelectPeriodScreen", user_data: user_data
         end 
     
@@ -34,7 +32,7 @@ class UsersController < ApplicationController
 
     def logout 
 
-        redirect_to controller: "users", action: "openLoginScreen", logout: true
+        redirect_to controller: "sessions", action: "deleteSessions"
 
     end
 
@@ -49,15 +47,14 @@ class UsersController < ApplicationController
         @department_name = session[:user_data]["department_name"]
         @maneger_flag = session[:user_data]["user_id"] == session[:user_data]["manager_user_id"]
 
-        @period = "1999-09"
-        @date_array = []
+        @period_array = []
         today = Date.today
 
         for i in 0..12 do
             date = today << i
             year = date.year.to_s
             month = date.month.to_s
-            @date_array.push([year + "年" + month + "日", year + "-" + month])
+            @period_array.push([year + "年" + month + "日", year + "-" + month])
         end
 
         render "selectPeriod"
@@ -66,9 +63,8 @@ class UsersController < ApplicationController
 
     def getUsers
 
-        @user_id = params[:user_data]
         @period = params[:period]
-        @users = User.getNormalUsersData("H184100001", @period)
+        @users = User.getNormalUsersData(session[:user_data]["user_id"], @period)
         
         render "users"
 

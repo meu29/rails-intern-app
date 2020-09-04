@@ -7,13 +7,13 @@ class User < ApplicationRecord
     def self.getUserData(user_id, password)
         
         query = <<-EOS
-          select Users.id as user_id, Users.name as user_name, Users.password, Belongs.department_id, Departments.name as department_name, Belongs.manager_user_id from Users
-            inner join (Belongs inner join Departments on Belongs.department_id = Departments.id)
-            on Users.id = Belongs.user_id
-            where Users.id = (:user_id) and Users.password = (:password)
+          select users.id as user_id, users.name as user_name, users.password, belongs.department_id, departments.name as department_name, belongs.manager_user_id from users
+            inner join (belongs inner join departments on belongs.department_id = departments.id)
+            on users.id = belongs.user_id
+            where users.id = (:user_id) and users.password = (:password)
         EOS
 
-        #select Users.user_id, Users.name as user_name, Users.password, Users.department_id, Departments.name as department_name from Users 
+        #select users.user_id, users.name as user_name, users.password, users.department_id, Departments.name as department_name from users 
         sql = ActiveRecord::Base.sanitize_sql_array([query, user_id: user_id, password: password])
         data = ActiveRecord::Base.connection.select_all(sql)
         
@@ -25,10 +25,10 @@ class User < ApplicationRecord
     def self.getNormalUsersData(manager_user_id, period)
 
       query = <<-EOS
-        select Users.id as user_id, Users.name, States.state from Users
-          inner join (Belongs inner join States on Belongs.user_id = States.user_id)
-          on Belongs.user_id = Users.id
-          where Belongs.user_id != (:manager_user_id) and Belongs.manager_user_id = (:manager_user_id) and States.period = (:period)
+        select users.id as user_id, users.name, states.state from users
+          inner join (belongs inner join states on belongs.user_id = states.user_id)
+          on belongs.user_id = users.id
+          where belongs.user_id != (:manager_user_id) and belongs.manager_user_id = (:manager_user_id) and states.period = (:period)
       EOS
 
       sql = ActiveRecord::Base.sanitize_sql_array([query, manager_user_id: manager_user_id, period: period])

@@ -11,12 +11,12 @@
       <p>所属: <%= @department_name %></p>
       <% if @maneger_flag == true %>
         <%= form_tag("/users", method: :get) do %>
-          <%= select_tag "period", options_for_select(@date_array) %>
+          <%= select_tag "period", options_for_select(@period_array) %>
           <input type="submit" value="検索">
         <% end %>
       <% else %>
         <%= form_tag("/report/" + @user_id + "/" + @period, method: :get) do %>
-          <%= select_tag "period", options_for_select(@date_array) %>
+          <%= select_tag "period", options_for_select(@period_array) %>
           <input type="submit" value="検索">
         <% end %>
       <% end %>

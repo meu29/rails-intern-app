@@ -7,35 +7,36 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
-      <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
-        <tr>
-          <th>日付</th>
-          <th>曜日</th>
-          <th>開始時刻</th>
-          <th>終了時刻</th>
-          <th>休憩時間</th>
-          <th>稼働時間</th>
-          <th>チェック</th>
-        </tr>
-        <td>
-        　<th>8/31</th>
-          <th>日</th>
-          <th>12:00</th>
-          <th>17:00</th>
-          <th>01:30</th>
-          <th>04:00</th>
-          <th><input class="manager_check" type="checkbox"></th>
-        </td>
-      </table>
+    　<%= form_tag("/report/" + @user_id + "/" + @period, method: :post) do %>
+        <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
+          <tr>
+            <th>日付</th>
+            <th>曜日</th>
+            <th>開始時刻</th>
+            <th>終了時刻</th>
+            <th>休憩時間</th>
+            <th>稼働時間</th>
+            <th>チェック</th>
+          </tr>
+            <% @report_data_array.each do |report_data| %>
+        　    <tr>
+                <% report_data.keys.each do |key| %>
+                  <% if key == "manager_check" and report_data[key] == "true" %>
+                    <td><%= check_box "manager_check", report_data["date"], {:checked => "checked"} %></td>
+                  <% elsif key == "manager_check" and report_data[key] == "false" %>
+                    <td><%= check_box "manager_check", report_data["date"], onCheck: 'alert("まんち")' %></td>
+                    <td><%= text_field_tag "time" %></td>
+                  <% else %>
+                    <td><%= report_data[key] %></td>
+                  <% end %> 
+                <% end %> 
+              </tr>
+            <% end %> 
+        </table>
+        <%= hidden_field :operation, :value => "承認" %>
+        <%= submit_tag "承認" %>
+      <% end %>
       <div>
-        <%= form_tag("/report/" + @user_id + "/" + @period) do %>
-          <%= hidden_field :operation, :value => "承認" %>
-          <%= submit_tag "承認" %>
-        <% end %>
-        <%= form_tag("/report/" + @user_id + "/" + @period) do %>
-          <%= hidden_field :operation, :value => "差し戻し" %>
-          <%= submit_tag "差し戻し" %>
-        <% end %>
         <%= form_tag("/report/" + @user_id + "/" + @period) do %>
           <%= hidden_field :operation, :value => "キャンセル" %>
           <%= submit_tag "キャンセル" %>

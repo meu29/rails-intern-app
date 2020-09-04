@@ -7,6 +7,7 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
+      <p><%= @period %>勤怠報告</p>
       <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
         <tr>
           <th>日付</th>
@@ -16,14 +17,17 @@
           <th>休憩時間</th>
           <th>稼働時間</th>
         </tr>
-        <td>
-        　<th>8/31</th>
-          <th>日</th>
-          <th>12:00</th>
-          <th>17:00</th>
-          <th>01:30</th>
-          <th>04:00</th>
-        </td>
+        <% @report_data_array.each do |report_data| %>
+          <tr>
+            <% report_data.keys.each do |key| %>
+              <% if key == "start_time" or key == "finish_time" or key == "break_time" %>
+                <td><%= form.text_field :time %></td>
+              <% else %>
+                <td><%= report_data[key] %></td>
+              <% end %> 
+            <% end %>
+          </tr>
+        <% end %>
       </table>
       <div>
         <%= form_tag("/report/" + @user_id + "/" + @period) do %>
