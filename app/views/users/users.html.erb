@@ -20,7 +20,17 @@
             <td><%= user["user_id"] %></td>
             <td><%= user["name"] %></td>
             <td><%= user["state"] %></td>
-            <td><%= link_to("報告を確認する", "report/" + user["user_id"] + "/" + @period) %></td>
+            <% if user["state"] != "編集中" %>
+              <td>
+                <%= form_tag("/report/" + user["user_id"], method: :get) do %>
+                  <%= hidden_field_tag :period, @period %>
+                  <input type="submit" value="報告を表示する"> 
+                  <!--<%= submit_tag "報告を表示する" %>-->
+                <% end %>
+              </td>
+            <% else %>
+              <td>-</td>
+            <% end %>
           </tr>
         <% end %>
       </table>

@@ -8,6 +8,6 @@ Rails.application.routes.draw do
   post "/logout", to: "sessions#deleteSessions"
   get "/selectPeriod", to: "users#openSelectPeriodScreen"
   get "/users", to: "users#getUsers"
-  get "/report/:user_id/:period", to: "reports#openReportEditScreen"
-  post "/report/:user_id/:period", to: "reports#updateState"
+  get "/report/:user_id", to: "reports#openReportEditScreen"
+  post "/report/:user_id", to: "reports#updateState"
 end

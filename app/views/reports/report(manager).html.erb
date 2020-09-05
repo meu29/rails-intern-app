@@ -37,7 +37,7 @@
         <%= submit_tag "承認" %>
       <% end %>
       <div>
-        <%= form_tag("/report/" + @user_id + "/" + @period) do %>
+        <%= form_tag("/report/" + @user_id) do %>
           <%= hidden_field :operation, :value => "キャンセル" %>
           <%= submit_tag "キャンセル" %>
         <% end %>

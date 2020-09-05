@@ -12,12 +12,12 @@
       <% if @maneger_flag == true %>
         <%= form_tag("/users", method: :get) do %>
           <%= select_tag "period", options_for_select(@period_array) %>
-          <input type="submit" value="検索">
+          <%= submit_tag "報告者を検索" %>
         <% end %>
       <% else %>
-        <%= form_tag("/report/" + @user_id + "/" + @period, method: :get) do %>
+        <%= form_tag("/report/" + @user_id, method: :get) do %>
           <%= select_tag "period", options_for_select(@period_array) %>
-          <input type="submit" value="検索">
+          <%= submit_tag "報告編集画面を表示" %>
         <% end %>
       <% end %>
       <form action="/logout" method="post">

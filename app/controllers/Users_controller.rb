@@ -6,8 +6,11 @@ class UsersController < ApplicationController
     protect_from_forgery
 
     def openLoginScreen
-
+   
         if session[:user_data] == nil
+            render "login"
+        elsif params[:logout] = true
+            session[:user_data] = nil
             render "login"
         else
             redirect_to controller: "users", action: "openSelectPeriodScreen"
@@ -31,8 +34,9 @@ class UsersController < ApplicationController
     end
 
     def logout 
-
-        redirect_to controller: "sessions", action: "deleteSessions"
+        
+        redirect_to controller "users", action: "login", logout: true
+        #redirect_to controller: "sessions", action: "deleteSessions"
 
     end
 

@@ -7,7 +7,7 @@ class ReportsController < ApplicationController
   def openReportEditScreen
     
     @user_id = params[:user_id]
-    @period = params[:period]
+    @period = params[:period] 
     @report_data_array = Report.initItems(@user_id, @period)
 
     if session[:user_data]["user_id"] == session[:user_data]["manager_user_id"]
@@ -37,13 +37,14 @@ class ReportsController < ApplicationController
       Report.updateItem(user_id, "編集中", period)
     #一般社員側の操作
     elsif operation == "承認依頼"
-      Report.updateItem(user_id, "編集中", date)
+      Report.updateItems(user_id, params[:date], period, params[:start_time])
+      #Report.updateItem(user_id, "編集中", date)
     elsif operation == "保存"
-      Report.updateItem(user_id, "編集中", date)
-    #共通の処理(キャンセル)
-    else 
-      redirect_to controller: "users", action: "openSelectPeriodScreen"
+      Report.updateItems(user_id, period, params[:start_time])
     end
+    
+    #キャンセルなら何もしない(マネージャー、一般共通)
+    redirect_to controller: "users", action: "openSelectPeriodScreen"
 
   end
 

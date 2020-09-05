@@ -1,7 +1,6 @@
 #モデルを編集したら必ずサーバーを再起動する
 class Report < ApplicationRecord
 
-  
   def self.initItems(user_id, period)
 
     existing_data = getItems(user_id, period)
@@ -50,13 +49,36 @@ class Report < ApplicationRecord
 
   end
   
+  '''
+  def self.updateItems(user_id, state, user_type)
 
-  def self.updateItems(user_id, state)
+    if user_type == "manager"
+      query = "update states set state = (:state) where user_id = (:user_id)" 
+      sql = ActiveRecord::Base.sanitize_sql_array([query, state: state, user_id: user_id])  
+    else
 
-    query = "update states set state = (:state) where user_id = (:user_id)" 
-    sql = ActiveRecord::Base.sanitize_sql_array([query, state: state, user_id: user_id])
-    
+    end
+
     return ActiveRecord::Base.connection.execute(sql)
+
+  end
+  '''
+
+  def self.updateItems(user_id, date_array, period, start_time_array)
+
+    logger.debug(user_id)
+    logger.debug(period)
+    logger.debug(start_time_array)
+
+    (0..start_time_array.length - 1).each do |i|
+      if start_time_array[i].length == 5 #01:00, 13:00等 => 文字数5
+        query = "update reports set start_time = (:start_time) where user_id = (:user_id) and date = (:date) and period = (:period)"
+        sql = ActiveRecord::Base.sanitize_sql_array([query, start_time: start_time_array[i], user_id: user_id, date: date_array[i], period: period])
+        ActiveRecord::Base.connection.execute(sql)
+      end
+    end
+
+    return
 
   end
 

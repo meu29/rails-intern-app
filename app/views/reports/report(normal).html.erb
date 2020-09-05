@@ -8,51 +8,42 @@
     </header>
     <main>
       <p><%= @period %>勤怠報告</p>
-      <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
-        <tr>
-          <th>日付</th>
-          <th>曜日</th>
-          <th>開始時刻</th>
-          <th>終了時刻</th>
-          <th>休憩時間</th>
-          <th>稼働時間</th>
-        </tr>
-        <% @report_data_array.each do |report_data| %>
+      <%= form_tag("/report/" + @user_id, method: :post) do %>
+        <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
           <tr>
-            <% report_data.keys.each do |key| %>
-              <% if key == "start_time" or key == "finish_time" or key == "break_time" %>
-                <td><%= form.text_field :time %></td>
-              <% else %>
-                <td><%= report_data[key] %></td>
-              <% end %> 
-            <% end %>
+            <th>日付</th>
+            <th>曜日</th>
+            <th>開始時刻</th>
+            <th>終了時刻</th>
+            <th>休憩時間</th>
+            <th>稼働時間</th>
+            <th>マネージャーチェック</th>
           </tr>
-        <% end %>
-      </table>
-      <div>
-        <%= form_tag("/report/" + @user_id + "/" + @period) do %>
-          <%= hidden_field :operation, :value => "承認依頼" %>
-          <%= submit_tag "承認依頼" %>
-        <% end %>
-        <%= form_tag("/report/" + @user_id + "/" + @period) do %>
-          <%= hidden_field :operation, :value => "保存" %>
-          <%= submit_tag "保存" %>
-        <% end %>
-        <%= form_tag("/report/" + @user_id + "/" + @period) do %>
-          <%= hidden_field :operation, :value => "キャンセル" %>
-          <%= submit_tag "キャンセル" %>
-        <% end %>
-      </div>
+          <% @report_data_array.each do |report_data| %>
+            <tr>
+              <td><%= text_field_tag "date[]", report_data["date"] %></td>
+              <td><%= report_data["wday"] %></td>
+              <!-- 配列にしないと一番下のフォームに入力された値しか取得しない -->
+              <td><%= text_field_tag "start_time[]", report_data["start_time"] %></td>
+              <td><%= text_field_tag "finish_time[]", report_data["finish_time"] %></td>
+              <td><%= text_field_tag "break_time[]", report_data["break_time"] %></td>
+              <td><%= report_data["working_time"] %></td>
+              <% if report_data["manager_check"] == "true" %>
+                <td>承認</td>
+              <% else %>
+                <td>未承認</td>
+              <% end %>
+            </tr>
+          <% end %>
+        </table>
+        <%= hidden_field_tag :period, @period %>
+        <%= hidden_field_tag :operation, "承認依頼" %>
+        <%= submit_tag "承認依頼" %>      
+      <% end %>
+      <%= form_tag("/report/" + @user_id) do %>
+        <%= hidden_field_tag :operation, "キャンセル" %>
+        <%= submit_tag "キャンセル" %>
+      <% end %>
     </main>
-    <script>
-      function check() {
-        var checkbox = document.getElementsByClassName("manager_check");
-        for (var i = 0; i <= checkbox.length - 1; i++) {
-          if (checkbox[i].checked == false) {
-            alert("error");
-          }
-        }
-      }
-    </script>
   </body>
 </html>
