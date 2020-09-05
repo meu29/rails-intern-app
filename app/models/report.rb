@@ -64,16 +64,18 @@ class Report < ApplicationRecord
   end
   '''
 
-  def self.updateItems(user_id, date_array, period, start_time_array)
-
-    logger.debug(user_id)
-    logger.debug(period)
-    logger.debug(start_time_array)
-
+  def self.updateItems(user_id, date_array, period, start_time_array, finish_time_array, break_time_array)
+    '''
+    p Time.parse("09:00") - 3600 #一時間前
+    p (Time.parse("09:00") - Time.parse("03:00")) / 3600  6時間
+   '''
     (0..start_time_array.length - 1).each do |i|
       if start_time_array[i].length == 5 #01:00, 13:00等 => 文字数5
-        query = "update reports set start_time = (:start_time) where user_id = (:user_id) and date = (:date) and period = (:period)"
-        sql = ActiveRecord::Base.sanitize_sql_array([query, start_time: start_time_array[i], user_id: user_id, date: date_array[i], period: period])
+        query = <<-EOS
+         update reports set start_time = (:start_time) and finish_time = (:finish_time) and break_time = (:break_time)
+          where user_id = (:user_id) and date = (:date) and period = (:period)
+        EOS
+        sql = ActiveRecord::Base.sanitize_sql_array([query, start_time: start_time_array[i], finish_time: start_time_array[i], break_time: break_time_array[i], user_id: user_id, date: date_array[i], period: period])
         ActiveRecord::Base.connection.execute(sql)
       end
     end

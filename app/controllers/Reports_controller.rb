@@ -37,7 +37,7 @@ class ReportsController < ApplicationController
       Report.updateItem(user_id, "編集中", period)
     #一般社員側の操作
     elsif operation == "承認依頼"
-      Report.updateItems(user_id, params[:date], period, params[:start_time])
+      Report.updateItems(user_id, params[:date], period, params[:start_time], params[:finish_time], params[:break_time])
       #Report.updateItem(user_id, "編集中", date)
     elsif operation == "保存"
       Report.updateItems(user_id, period, params[:start_time])
