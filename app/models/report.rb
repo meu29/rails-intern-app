@@ -40,7 +40,7 @@ class Report < ApplicationRecord
   def self.getItems(user_id, period)
 
     query =<<-EOS
-      select date, wday, start_time, finish_time, break_time, working_time, manager_check from reports
+      select date, wday, start_time, finish_time, break_time, working_time from reports
         where user_id = (:user_id) and period = (:period)
     EOS
     sql = ActiveRecord::Base.sanitize_sql_array([query, user_id: user_id, period: period])
@@ -49,33 +49,18 @@ class Report < ApplicationRecord
 
   end
   
-  '''
-  def self.updateItems(user_id, state, user_type)
-
-    if user_type == "manager"
-      query = "update states set state = (:state) where user_id = (:user_id)" 
-      sql = ActiveRecord::Base.sanitize_sql_array([query, state: state, user_id: user_id])  
-    else
-
-    end
-
-    return ActiveRecord::Base.connection.execute(sql)
-
-  end
-  '''
-
   def self.updateItems(user_id, date_array, period, start_time_array, finish_time_array, break_time_array)
-    '''
-    p Time.parse("09:00") - 3600 #一時間前
-    p (Time.parse("09:00") - Time.parse("03:00")) / 3600  6時間
-   '''
+
     (0..start_time_array.length - 1).each do |i|
-      if start_time_array[i].length == 5 #01:00, 13:00等 => 文字数5
+      if start_time_array[i].length == 5 and finish_time_array[i].length == 5 and break_time_array[i].length == 5 #01:00, 13:00等 => 文字数5
+        time_dif = Time.parse(finish_time_array[i]) - Time.parse(start_time_array[i])
+        working_time = (time_dif / 3600).floor.to_s + ":" + ((time_dif % 3600) / 60).floor.to_s
+        logger.debug(working_time)
         query = <<-EOS
-         update reports set start_time = (:start_time) and finish_time = (:finish_time) and break_time = (:break_time)
+         update reports set start_time = (:start_time), finish_time = (:finish_time), break_time = (:break_time), working_time = (:working_time)
           where user_id = (:user_id) and date = (:date) and period = (:period)
         EOS
-        sql = ActiveRecord::Base.sanitize_sql_array([query, start_time: start_time_array[i], finish_time: start_time_array[i], break_time: break_time_array[i], user_id: user_id, date: date_array[i], period: period])
+        sql = ActiveRecord::Base.sanitize_sql_array([query, start_time: start_time_array[i], finish_time: finish_time_array[i], break_time: break_time_array[i], working_time: working_time, user_id: user_id, date: date_array[i], period: period])
         ActiveRecord::Base.connection.execute(sql)
       end
     end

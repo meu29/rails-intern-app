@@ -24,6 +24,7 @@
               <td><%= text_field_tag "date[]", report_data["date"] %></td>
               <td><%= report_data["wday"] %></td>
               <!-- 配列にしないと一番下のフォームに入力された値しか取得しない -->
+              <!-- time型.strftime("%H:%M") -->
               <td><%= text_field_tag "start_time[]", report_data["start_time"] %></td>
               <td><%= text_field_tag "finish_time[]", report_data["finish_time"] %></td>
               <td><%= text_field_tag "break_time[]", report_data["break_time"] %></td>
