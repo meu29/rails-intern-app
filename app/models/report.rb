@@ -23,7 +23,7 @@ class Report < ApplicationRecord
     set_data_array = []
   
     (1..end_of_month_date).each do |d|
-      set_data_array.push({"user_id": user_id, "period": period, "date": d, "wday": wday_array[wday_index],"start_time": nil, "finish_time": nil, "break_time": nil, "working_time": "00:00", "manager_check": "false"})
+      set_data_array.push({"user_id": user_id, "period": period, "date": d, "wday": wday_array[wday_index],"start_time": nil, "finish_time": nil, "break_time": nil, "working_time": 0.0, "manager_check": false})
       if wday_index == 6
         wday_index = 0
       else
@@ -40,7 +40,7 @@ class Report < ApplicationRecord
   def self.getItems(user_id, period)
 
     query =<<-EOS
-      select date, wday, start_time, finish_time, break_time, working_time from reports
+      select date, wday, start_time, finish_time, break_time, working_time, manager_check from reports
         where user_id = (:user_id) and period = (:period)
     EOS
     sql = ActiveRecord::Base.sanitize_sql_array([query, user_id: user_id, period: period])
@@ -49,13 +49,12 @@ class Report < ApplicationRecord
 
   end
   
-  def self.updateItems(user_id, date_array, period, start_time_array, finish_time_array, break_time_array)
+  def self.updateItemsByNormalUser(user_id, date_array, period, start_time_array, finish_time_array, break_time_array)
 
     (0..start_time_array.length - 1).each do |i|
-      if start_time_array[i].length == 5 and finish_time_array[i].length == 5 and break_time_array[i].length == 5 #01:00, 13:00等 => 文字数5
-        time_dif = Time.parse(finish_time_array[i]) - Time.parse(start_time_array[i])
-        working_time = (time_dif / 3600).floor.to_s + ":" + ((time_dif % 3600) / 60).floor.to_s
-        logger.debug(working_time)
+      if start_time_array[i].length == 5 and finish_time_array[i].length == 5
+        working_time = (Time.parse(finish_time_array[i]) - Time.parse(start_time_array[i])) / 3600
+        working_time -= break_time_array[i].to_i / 60
         query = <<-EOS
          update reports set start_time = (:start_time), finish_time = (:finish_time), break_time = (:break_time), working_time = (:working_time)
           where user_id = (:user_id) and date = (:date) and period = (:period)
@@ -63,6 +62,23 @@ class Report < ApplicationRecord
         sql = ActiveRecord::Base.sanitize_sql_array([query, start_time: start_time_array[i], finish_time: finish_time_array[i], break_time: break_time_array[i], working_time: working_time, user_id: user_id, date: date_array[i], period: period])
         ActiveRecord::Base.connection.execute(sql)
       end
+    end
+
+    return
+
+  end
+
+  def self.updateItemsByManagerUser(user_id, date_array, period, manager_check_array)
+
+    (0..manager_check_array.length - 1).each do |i|
+      query = <<-EOS
+        update reports set manager_check = (:manager_check)
+          where user_id = (:user_id) and date = (:date) and period = (:period)
+      EOS
+      #文字列のtrue/falseをboolean型に変換
+      manager_check = ActiveRecord::Type::Boolean.new.cast(manager_check_array[i])
+      sql = ActiveRecord::Base.sanitize_sql_array([query, user_id: user_id, date: date_array[i], period: period, manager_check: manager_check])
+      ActiveRecord::Base.connection.execute(sql)
     end
 
     return

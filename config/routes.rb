@@ -9,5 +9,5 @@ Rails.application.routes.draw do
   get "/selectPeriod", to: "users#openSelectPeriodScreen"
   get "/users", to: "users#getUsers"
   get "/report/:user_id", to: "reports#openReportEditScreen"
-  post "/report/:user_id", to: "reports#updateState"
+  post "/report/:user_id", to: "reports#updateStateAndReport"
 end

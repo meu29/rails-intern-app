@@ -1,0 +1,59 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+  </head>
+  <body>
+    <header>
+      <p>勤怠管理システム</p>
+    </header>
+    <main>
+      <p><%= @period %>勤怠報告</p>
+      <p>報告者<%= @usr_id %></p>
+      <p><%= "所属 " + @department_name %></p>   
+      <p>
+      <%= form_tag("/report/" + @user_id, method: :post) do %>
+        <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
+          <tr>
+            <th>日付</th>
+            <th>曜日</th>
+            <th>開始時刻</th>
+            <th>終了時刻</th>
+            <th>休憩時間合計(単位: 分)</th>
+            <th>稼働時間合計</th>
+          </tr>
+          <% day_count = 0 %>
+          <% working_date_sum = 0 %>
+          <% @report_data_array.each do |report_data| %>
+            <tr>
+              <td><%= text_field_tag "date[]", report_data["date"] %></td>
+              <td><%= report_data["wday"] %></td>
+              <!-- 配列にしないと一番下のフォームに入力された値しか取得しない -->
+              <td><%= text_field_tag "start_time[]", report_data["start_time"] %></td>
+              <td><%= text_field_tag "finish_time[]", report_data["finish_time"] %></td>
+              <td><%= text_field_tag "break_time[]", report_data["break_time"] %></td>
+              <% hours = report_data["working_time"].floor %>
+              <% minutes = (report_data["working_time"] - hours) * 60 %>
+              <td><%= hours.to_s + "時間" + minutes.ceil.to_s + "分" %></td>
+            </tr>
+            <% if report_data["start_time"] != nil and report_data["finish_time"] != nil and report_data["break_time"] != nil %>
+              <% day_count += 1 %>
+              <!-- report.dbでsum(working_time)するとエラーになる -->
+              <% working_date_sum += report_data["working_time"] %>
+            <% end %>
+          <% end %>
+          <tr>
+          　<td>合計</td>
+            <td><%= day_count.to_s + "日" %></td>
+            <% hours = working_date_sum.floor %>
+            <% minutes = (working_date_sum - hours) * 60 %>
+            <td><%= hours.to_s + "時間" + minutes.ceil.to_s + "分" %></td>
+          <tr>
+        </table>
+        <%= hidden_field_tag :period, @period %>
+        <%= submit_tag "承認依頼", name: "approval_request" %> 
+        <%= submit_tag "保存", name: "save" %>      
+        <%= submit_tag "キャンセル" %>
+      <% end %>
+    </main>
+  </body>
+</html>

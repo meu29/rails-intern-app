@@ -7,43 +7,54 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
-      <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
-        <tr>
-          <th>日付</th>
-          <th>曜日</th>
-          <th>開始時刻</th>
-          <th>終了時刻</th>
-          <th>休憩時間</th>
-          <th>稼働時間</th>
-          <th>チェック</th>
-        </tr>
-        <% @report_data_array.each do |report_data| %>
-        　<tr>
-            <% report_data.keys.each do |key| %>
-              <td><%= report_data[key] %></td>
-            <% end %> 
-            <td><input type="checkbox"></td>
+      <p><%= "所属 " + @department_name %></p>   
+    　<%= form_tag("/report/" + @user_id, method: :post) do %>
+        <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
+          <tr>
+            <th>日付</th>
+            <th>曜日</th>
+            <th>開始時刻</th>
+            <th>終了時刻</th>
+            <th>休憩時間</th>
+            <th>稼働時間</th>
+            <th>チェック</th>
           </tr>
-        <% end %> 
-      </table>
-      <div>
-        <% ["承認", "差し戻し", "キャンセル"].each do |operation| %>
-          <%= form_tag("/report/" + @user_id, method: :post) do %>
-            <%= hidden_field_tag :period, @period %>
-            <%= hidden_field_tag :operation, operation %>
-            <%= submit_tag operation %>   
-          <% end %>
-        <% end %>
-      </div>
+          <% @report_data_array.each do |report_data| %>
+            <%= hidden_field_tag "date[]", report_data["date"] %>
+        　  <tr>
+              <% report_data.keys.each do |key| %>
+                <% if key == "manager_check" %>
+                <!--
+                  <td><%= check_box_tag "manager_check[]", {onclick: "check()"} %></td>
+                -->
+                <%= hidden_field_tag "manager_check[]", true %>
+                <% else %>
+                  <td><%= report_data[key] %></td>
+                <% end %>
+              <% end %> 
+            </tr>
+          <% end %> 
+        </table>
+        <%= hidden_field_tag :period, @period %>
+        <div>
+          <!-- キャンセルボタンにname不要 -->
+          <%= submit_tag "承認", name:"approval", disabled: true%>
+          <%= submit_tag "差し戻し", name:"remand" %>
+          <%= submit_tag "キャンセル" %>
+        </div>
+      <% end %>
     </main>
     <script>
       function check() {
-        var checkbox = document.getElementsByClassName("manager_check");
+        var checkbox = document.getElementsByName("manager_check");
         for (var i = 0; i <= checkbox.length - 1; i++) {
           if (checkbox[i].checked == false) {
-            alert("error");
+            document.getElementsByName("approval")[0].disabled = true;
+            return
           }
+          /* 動作確認用 */
         }
+        document.getElementsByName("approval")[0].disabled = false;
       }
     </script>
   </body>

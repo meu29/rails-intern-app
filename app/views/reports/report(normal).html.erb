@@ -8,6 +8,7 @@
     </header>
     <main>
       <p><%= @period %>勤怠報告</p>
+      <p><%= "所属 " + @department_name %></p> 
       <%= form_tag("/report/" + @user_id, method: :post) do %>
         <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
           <tr>
@@ -17,29 +18,19 @@
             <th>終了時刻</th>
             <th>休憩時間</th>
             <th>稼働時間</th>
-            <th>マネージャーチェック</th>
           </tr>
           <% @report_data_array.each do |report_data| %>
             <tr>
-              <td><%= text_field_tag "date[]", report_data["date"] %></td>
-              <td><%= report_data["wday"] %></td>
-              <!-- 配列にしないと一番下のフォームに入力された値しか取得しない -->
-              <!-- time型.strftime("%H:%M") -->
-              <td><%= text_field_tag "start_time[]", report_data["start_time"] %></td>
-              <td><%= text_field_tag "finish_time[]", report_data["finish_time"] %></td>
-              <td><%= text_field_tag "break_time[]", report_data["break_time"] %></td>
-              <td><%= report_data["working_time"] %></td>
-              <% if report_data["manager_check"] == "true" %>
-                <td>承認</td>
-              <% else %>
-                <td>未承認</td>
+              <% report_data.keys.each do |key| %>
+                <% if report_data[key].class == Time %>
+                  <td><%= report_data[key].strftime("%H:%M") %></td>               
+                <% else %>
+                  <td><%= report_data[key] %></td>
+                <% end %>
               <% end %>
             </tr>
           <% end %>
-        </table>
-        <%= hidden_field_tag :period, @period %>
-        <%= hidden_field_tag :operation, "承認依頼" %>
-        <%= submit_tag "承認依頼" %>      
+        </table>    
       <% end %>
       <%= form_tag("/report/" + @user_id) do %>
         <%= hidden_field_tag :operation, "キャンセル" %>
