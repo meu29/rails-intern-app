@@ -1,14 +1,16 @@
 <!DOCTYPE html5>
 <html>
   <head>
+    <meta charset="utf-8">
   </head>
   <body>
     <header>
       <p>勤怠管理システム</p>
     </header>
     <main>
-      <p><%= @date %></p>
-      <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
+      <p>氏名: <%= @user_name %></p>
+      <p>所属: <%= @department_name %></p>
+      <table border="1">
         <tr>
           <th>社員番号</th>
           <th>氏名</th>
@@ -22,10 +24,10 @@
             <td><%= user["state"] %></td>
             <% if user["state"] != "編集中" %>
               <td>
-                <%= form_tag("/report/" + user["user_id"], method: :get) do %>
-                  <%= hidden_field_tag :period, @period %>
-                  <input type="submit" value="報告を表示する"> 
-                  <!--<%= submit_tag "報告を表示する" %>-->
+                <%= form_tag("/report", method: :get) do %>
+                  <%= hidden_field_tag "user_id", user["user_id"] %>
+                  <%= hidden_field_tag "period", @period %>
+                  <%= submit_tag "報告を表示する" %>
                 <% end %>
               </td>
             <% else %>
@@ -35,5 +37,13 @@
         <% end %>
       </table>
     </main>
+    <style>
+      table th {
+        padding: 3px;
+      }
+      table td {
+        padding: 3px;
+      }
+    </style>
   </body>
 </html>

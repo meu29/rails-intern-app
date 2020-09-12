@@ -3,26 +3,21 @@
 #ActiveRecordも使えるようになる(継承?)
 class User < ApplicationRecord
     
-    #["ユーザーID", "氏名", "パスワード", "部署ID", "部署名", "その人のマネージャーのユーザーID"]
-    def self.getUserData(user_id, password)
+    def self.getItem(user_id, password)
         
         query = <<-EOS
-          select users.id as user_id, users.name as user_name, users.password, belongs.department_id, departments.name as department_name, belongs.manager_user_id from users
-            inner join (belongs inner join departments on belongs.department_id = departments.id)
-            on users.id = belongs.user_id
+          select users.id as user_id, name as user_name from users
             where users.id = (:user_id) and users.password = (:password)
         EOS
 
-        #select users.user_id, users.name as user_name, users.password, users.department_id, Departments.name as department_name from users 
         sql = ActiveRecord::Base.sanitize_sql_array([query, user_id: user_id, password: password])
-        data = ActiveRecord::Base.connection.select_all(sql)
         
-        return data.to_a[0]
+        return ActiveRecord::Base.connection.select_all(sql).to_a
     
     end
 
     #一般社員一覧を取得
-    def self.getNormalUsersData(manager_user_id, period)
+    def self.getItems_withOhterTables(manager_user_id, period)
 
       query = <<-EOS
         select users.id as user_id, users.name, states.state from users

@@ -7,55 +7,99 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
-      <p><%= "所属 " + @department_name %></p>   
-    　<%= form_tag("/report/" + @user_id, method: :post) do %>
-        <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
+      <p><%= @period %>勤怠報告</p>
+      <p>氏名: <%= @user_name %></p>
+      <p>所属: <%= @department_name %></p>  
+    　<%= form_tag("/report", method: :post) do %>
+        <table border="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
           <tr>
             <th>日付</th>
             <th>曜日</th>
             <th>開始時刻</th>
             <th>終了時刻</th>
-            <th>休憩時間</th>
-            <th>稼働時間</th>
-            <th>チェック</th>
+            <th>休憩時間(単位: 分)</th>
+            <th>稼働時間(単位: 時)</th>
+            <th>マネージャーチェック</th>
           </tr>
+          <% index = 0 %>
           <% @report_data_array.each do |report_data| %>
             <%= hidden_field_tag "date[]", report_data["date"] %>
         　  <tr>
               <% report_data.keys.each do |key| %>
                 <% if key == "manager_check" %>
-                <!--
-                  <td><%= check_box_tag "manager_check[]", {onclick: "check()"} %></td>
-                -->
-                <%= hidden_field_tag "manager_check[]", true %>
+                  <% if report_data[key] == 1 %>
+                    <td><%= check_box_tag("manager_check[]", nil, checked=true, {onclick: "switchState(#{index})"}) %></td>
+                  <% else %>
+                    <td><%= check_box_tag("manager_check[]", nil, checked=false, {onclick: "switchState(#{index})"}) %></td>
+                  <% end %>
+                  <%= hidden_field_tag "manager_check_value[]", report_data[key] %>
+                <% elsif key == "start_time" or key == "finish_time" %>
+                  <td><%= report_data[key].strftime("%H:%M") %></td>
                 <% else %>
                   <td><%= report_data[key] %></td>
                 <% end %>
               <% end %> 
             </tr>
+            <% index += 1 %>
           <% end %> 
         </table>
-        <%= hidden_field_tag :period, @period %>
+        <%= hidden_field_tag "user_id", @user_id %>
+        <%= hidden_field_tag "period", @period %>
         <div>
-          <!-- キャンセルボタンにname不要 -->
-          <%= submit_tag "承認", name:"approval", disabled: true%>
+          <input type="button" value="チェックテスト" onClick="test()" %>
+          <input type="button" value="チェック漏れ確認" onClick="check()" %>
+          <%= submit_tag "承認", name:"approval", disabled: true %>
           <%= submit_tag "差し戻し", name:"remand" %>
           <%= submit_tag "キャンセル" %>
         </div>
       <% end %>
     </main>
     <script>
+
+      function switchState(index) {
+
+        if (document.getElementsByName["manager_check_value[]"][index].value == 1) {
+          document.getElementsByName["manager_check_value[]"][index].value = 0;
+        } else {
+          document.getElementsByName["manager_check_value[]"][index].value = 1; 
+        }
+
+        alert(document.getElementsByName["manager_check_value[]"][index].value)
+      
+      }
+
       function check() {
-        var checkbox = document.getElementsByName("manager_check");
+
+        var checkbox = document.getElementsByName("manager_check[]");
+        var all_checked = true;
+
         for (var i = 0; i <= checkbox.length - 1; i++) {
           if (checkbox[i].checked == false) {
-            document.getElementsByName("approval")[0].disabled = true;
-            return
+            document.getElementsByName("manager_check[]")[i].style.background = "red";
+            all_checked = false;
+          } else {
+            document.getElementsByName("manager_check[]")[i].style.background = "white";
           }
-          /* 動作確認用 */
         }
-        document.getElementsByName("approval")[0].disabled = false;
+        
+        if (all_checked == true) {
+          document.getElementsByName("approval")[0].disabled = false;
+        } else {
+          document.getElementsByName("approval")[0].disabled = true;
+        }
+
       }
+
+      //テスト用
+      function test() {
+        
+        for (var i = 0; i <= document.getElementsByName("manager_check[]").length - 1; i++) {
+          document.getElementsByName("manager_check[]")[i].checked = true;
+          document.getElementsByName("manager_check_value[]")[i].value = 1;
+        }
+
+      }
+      
     </script>
   </body>
 </html>

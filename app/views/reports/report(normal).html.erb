@@ -8,22 +8,31 @@
     </header>
     <main>
       <p><%= @period %>勤怠報告</p>
-      <p><%= "所属 " + @department_name %></p> 
+      <p>氏名: <%= @user_name %></p>
+      <p>所属: <%= @department_name %></p> 
       <%= form_tag("/report/" + @user_id, method: :post) do %>
-        <table order="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
+        <table border="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
           <tr>
             <th>日付</th>
             <th>曜日</th>
             <th>開始時刻</th>
             <th>終了時刻</th>
-            <th>休憩時間</th>
-            <th>稼働時間</th>
+            <th>休憩時間(単位: 分)</th>
+            <th>稼働時間(単位: 時)</th>
+            <th>マネージャーチェック</th>
           </tr>
           <% @report_data_array.each do |report_data| %>
             <tr>
               <% report_data.keys.each do |key| %>
                 <% if report_data[key].class == Time %>
-                  <td><%= report_data[key].strftime("%H:%M") %></td>               
+                  <td><%= report_data[key].strftime("%H:%M") %></td>
+                <% elsif key == "manager_check" %>
+                  <% if report_data[key] == 1 %>
+                    <td>◯</td>
+                  <% else %>
+                    <!-- normal_editでは"不備あり" -->
+                    <td>未確認</td>
+                  <% end %>   
                 <% else %>
                   <td><%= report_data[key] %></td>
                 <% end %>
@@ -32,10 +41,19 @@
           <% end %>
         </table>    
       <% end %>
-      <%= form_tag("/report/" + @user_id) do %>
-        <%= hidden_field_tag :operation, "キャンセル" %>
+      <%= form_tag("/report") do %>
+        <%= hidden_field_tag "user_id", @user_id %>
+        <%= hidden_field_tag "operation", "キャンセル" %>
         <%= submit_tag "キャンセル" %>
       <% end %>
     </main>
+    <style>
+      table th {
+        padding: 3px;
+      }
+      table td {
+        padding: 3px;
+      }
+    </style>
   </body>
 </html>

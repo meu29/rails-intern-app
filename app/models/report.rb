@@ -1,13 +1,7 @@
 #モデルを編集したら必ずサーバーを再起動する
 class Report < ApplicationRecord
 
-  def self.initItems(user_id, period)
-
-    existing_data = getItems(user_id, period)
-    
-    if existing_data.length != 0
-      return existing_data
-    end
+  def self.createItems(user_id, period)
 
     splited_period = period.split("-")
     year = splited_period[0].to_i
@@ -23,7 +17,7 @@ class Report < ApplicationRecord
     set_data_array = []
   
     (1..end_of_month_date).each do |d|
-      set_data_array.push({"user_id": user_id, "period": period, "date": d, "wday": wday_array[wday_index],"start_time": nil, "finish_time": nil, "break_time": nil, "working_time": 0.0, "manager_check": false})
+      set_data_array.push({"user_id": user_id, "period": period, "date": d, "wday": wday_array[wday_index], "start_time": nil, "finish_time": nil, "break_time": nil, "working_time": 0.0, "manager_check": false})
       if wday_index == 6
         wday_index = 0
       else
@@ -33,7 +27,7 @@ class Report < ApplicationRecord
 
     Report.import(set_data_array)
     
-    return getItems(user_id, period)
+    return
     
   end
 
@@ -45,11 +39,18 @@ class Report < ApplicationRecord
     EOS
     sql = ActiveRecord::Base.sanitize_sql_array([query, user_id: user_id, period: period])
     
-    return ActiveRecord::Base.connection.select_all(sql).to_a
+    result = ActiveRecord::Base.connection.select_all(sql).to_a
+
+    if result.length == 0
+      createItems(user_id, period)
+      return getItems(user_id, period)
+    else 
+      return result
+    end
 
   end
-  
-  def self.updateItemsByNormalUser(user_id, date_array, period, start_time_array, finish_time_array, break_time_array)
+
+  def self.updateItems_ByNormalUser(user_id, date_array, period, start_time_array, finish_time_array, break_time_array)
 
     (0..start_time_array.length - 1).each do |i|
       if start_time_array[i].length == 5 and finish_time_array[i].length == 5
@@ -68,7 +69,7 @@ class Report < ApplicationRecord
 
   end
 
-  def self.updateItemsByManagerUser(user_id, date_array, period, manager_check_array)
+  def self.updateItems_ByManagerUser(user_id, date_array, period, manager_check_array)
 
     (0..manager_check_array.length - 1).each do |i|
       query = <<-EOS

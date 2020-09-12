@@ -1,55 +1,61 @@
-#データベース.テーブル => sample_development.Users
-require("date")
+#usersテーブル(ユーザーID, 氏名, パスワード)とbelongsテーブル(ユーザーID, そのユーザーのマネージャーのユーザーID, 部署ID)は手動で登録する(新入社員の追加など)ことを前提とする
 
 class UsersController < ApplicationController
-
+    
     protect_from_forgery
 
-    def openLoginScreen
+    def onGetLogin
    
-        if session[:user_data] == nil
-            render "login"
-        elsif params[:logout] = true
-            session[:user_data] = nil
+        if Redis.current.get("user_data") == nil
             render "login"
         else
-            redirect_to controller: "users", action: "openSelectPeriodScreen"
+            redirect_to controller: "users", action: "onGetPeriod"
         end
 
     end
 
-    def login
+    def onPostLogin
 
-        user_data = User.getUserData(params[:user_id], params[:password])
+        user_data = User.getItem(params[:user_id], params[:password])[0]
 
         if user_data == nil
             @message = "ユーザーIDかパスワードが間違っています"
             render "login"
         else
-            #セッションの保存はリダイレクト先でないとできない
-            #redirect_to controller: "sessions", action: "createSessions", user_data: user_data
-            redirect_to controller: "users", action: "openSelectPeriodScreen", user_data: user_data
-        end 
-    
-    end
-
-    def logout 
-        
-        redirect_to controller "users", action: "login", logout: true
-        #redirect_to controller: "sessions", action: "deleteSessions"
-
-    end
-
-    def openSelectPeriodScreen
-        
-        if session["user_data"] == nil
-          session[:user_data] = params[:user_data]
+            Redis.current.set("user_data", user_data.to_json) 
+            redirect_to controller: "users", action: "onGetPeriod"
         end
 
-        @user_id = session[:user_data]["user_id"]
-        @user_name = session[:user_data]["user_name"]
-        @department_name = session[:user_data]["department_name"]
-        @maneger_flag = session[:user_data]["user_id"] == session[:user_data]["manager_user_id"]
+    end
+
+    def onPostLogout
+
+        Redis.current.del("user_data") 
+        redirect_to controller: "users", action: "onGetLogin"
+
+    end
+
+    def onGetPeriod
+
+        user_data = JSON.parse(Redis.current.get("user_data"))
+        @user_name = user_data["user_name"]
+        @user_id = user_data["user_id"]
+
+        values = Department.getItem_withOtherTables(@user_id)[0]
+
+        if user_data["department_name"] == nil
+            user_data["department_name"] = values["department_name"]
+            #セッションを更新
+            Redis.current.set("user_data", user_data.to_json)
+        end
+        
+        @department_name = user_data["department_name"]
+        
+        if @user_id == values["manager_user_id"]
+            @path = "/users"
+        else
+            @path = "/report"
+        end
 
         @period_array = []
         today = Date.today
@@ -61,14 +67,19 @@ class UsersController < ApplicationController
             @period_array.push([year + "年" + month + "日", year + "-" + month])
         end
 
-        render "selectPeriod"
+        render "period"
 
     end
 
-    def getUsers
-
+    def onGetUsers
+        
+        user_data = JSON.parse(Redis.current.get("user_data"))
+        
+        @user_name = user_data["user_name"]
+        @user_id = user_data["user_id"]
+        @department_name = user_data["department_name"]
         @period = params[:period]
-        @users = User.getNormalUsersData(session[:user_data]["user_id"], @period)
+        @users = User.getItems_withOhterTables(@user_id, @period)
         
         render "users"
 

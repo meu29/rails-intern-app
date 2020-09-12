@@ -1,0 +1,23 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+  </head>
+  <body>
+    <header>
+      <p>勤怠管理システム</p>
+    </header>
+    <main>
+      <p>勤怠報告期間選択</p>
+      <p>氏名: <%= @user_name %></p>
+      <p>所属: <%= @department_name %></p>
+      <%= form_tag(@path, method: :get) do %>
+        <%= select_tag "period", options_for_select(@period_array) %>
+        <%= hidden_field_tag "user_id", @user_id %>
+        <%= submit_tag "決定" %>
+      <% end %>
+      <form action="/logout" method="post">
+        <input type="submit" value="ログアウト">
+      </form>
+    </main>
+  </body>
+</html>

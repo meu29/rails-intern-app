@@ -1,9 +1,9 @@
 class Department < ApplicationRecord
 
-    def self.getItem(user_id)
+    def self.getItem_withOtherTables(user_id)
 
       query = <<-EOS
-        select departments.name from departments
+        select departments.name as department_name, belongs.manager_user_id from departments
           inner join belongs on departments.id = belongs.department_id
           where belongs.user_id = (:user_id)
       EOS

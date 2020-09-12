@@ -1,13 +1,13 @@
 Rails.application.routes.draw do
   #コントローラーファイル名の先頭を小文字にしたもの
   #コントローラーファイルの名前が"Users_controller.rb"なら"users#メソッド名"
-  get "/", to: "users#openLoginScreen"
-  get "/login", to: "users#openLoginScreen"
-  post "/login", to: "users#login"
-  #post "/login", to: "sessions#createSessions"
-  post "/logout", to: "sessions#deleteSessions"
-  get "/selectPeriod", to: "users#openSelectPeriodScreen"
-  get "/users", to: "users#getUsers"
-  get "/report/:user_id", to: "reports#openReportEditScreen"
-  post "/report/:user_id", to: "reports#updateStateAndReport"
+  #メソッド名はon + <リクエストメソッド名> + <アクセス先urlパス名>とする
+  get "/", to: "users#onGetLogin"
+  get "/login", to: "users#onGetLogin"
+  post "/login", to: "users#onPostLogin"
+  post "/logout", to: "users#onPostLogout"
+  get "/period", to: "users#onGetPeriod"
+  get "/users", to: "users#onGetUsers"
+  get "/report", to: "reports#onGetReport"
+  post "/report", to: "reports#onPostReport"
 end
