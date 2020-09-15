@@ -27,12 +27,14 @@
         　  <tr>
               <% report_data.keys.each do |key| %>
                 <% if key == "manager_check" %>
+                  <!--hiddenとcheckboxのnameは同じにする -->
+                  <%= hidden_field_tag "manager_check[]" %>
                   <% if report_data[key] == 1 %>
-                    <td><%= check_box_tag("manager_check[]", nil, checked=true, {onclick: "switchState(#{index})"}) %></td>
+                    <td>承認済み</td>
+                    <%= hidden_field_tag "manager_check[]", 1 %>
                   <% else %>
-                    <td><%= check_box_tag("manager_check[]", nil, checked=false, {onclick: "switchState(#{index})"}) %></td>
+                    <td class="check"><%= check_box_tag "manager_check[]" %></td>
                   <% end %>
-                  <%= hidden_field_tag "manager_check_value[]", report_data[key] %>
                 <% elsif key == "start_time" or key == "finish_time" %>
                   <td><%= report_data[key].strftime("%H:%M") %></td>
                 <% else %>
@@ -56,29 +58,17 @@
     </main>
     <script>
 
-      function switchState(index) {
-
-        if (document.getElementsByName["manager_check_value[]"][index].value == 1) {
-          document.getElementsByName["manager_check_value[]"][index].value = 0;
-        } else {
-          document.getElementsByName["manager_check_value[]"][index].value = 1; 
-        }
-
-        alert(document.getElementsByName["manager_check_value[]"][index].value)
-      
-      }
-
       function check() {
 
-        var checkbox = document.getElementsByName("manager_check[]");
+        var checkbox = document.getElementsByClassName("check");
         var all_checked = true;
 
         for (var i = 0; i <= checkbox.length - 1; i++) {
-          if (checkbox[i].checked == false) {
-            document.getElementsByName("manager_check[]")[i].style.background = "red";
+          if (checkbox[i].childNodes[0].checked == false) {
+            document.getElementsByClassName("check")[i].style.background = "red";
             all_checked = false;
           } else {
-            document.getElementsByName("manager_check[]")[i].style.background = "white";
+            document.getElementsByClassName("check")[i].style.background = "white";
           }
         }
         
@@ -92,14 +82,15 @@
 
       //テスト用
       function test() {
-        
-        for (var i = 0; i <= document.getElementsByName("manager_check[]").length - 1; i++) {
-          document.getElementsByName("manager_check[]")[i].checked = true;
-          document.getElementsByName("manager_check_value[]")[i].value = 1;
+
+        var checkbox = document.getElementsByClassName("check");
+
+        for (var i = 0; i <= checkbox.length - 1; i++) {
+          document.getElementsByClassName("check")[i].childNodes[0].checked = true;
         }
 
       }
-      
+
     </script>
   </body>
 </html>

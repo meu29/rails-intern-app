@@ -40,17 +40,32 @@ class ReportsController < ApplicationController
 
   def onPostReport
 
-    #params[:manager_check] => チェックされた -> "on" されなかった -> "true"(文字列)
+    manager_check = params[:manager_check]
+
+    if manager_check != nil
+      filtered_manager_check = []
+      #チェックが入ると、チェックが入った位置とその一個前の位置との間に""が挿入されてしまうので対策
+      #例: 5つのチェックボックスが存在するとき、1番目と3番目のチェックボックスにチェックを入れる
+      # => ["", "1", "", "", "1", "", ""]が返される(本当は["1", "", "1", "", ""]が欲しい)
+      (0..manager_check.length - 1).each do |i|
+        if (manager_check[i + 1] == "1")
+          filtered_manager_check.push("1")
+        elsif (manager_check[i] == "" and manager_check[i + 1] == "")
+          filtered_manager_check.push("0")
+        end
+      end
+      logger.debug(filtered_manager_check)
+    end
+
     #保存かキャンセルならstatesテーブルを更新しない(保存 => 一般のみ, キャンセル => 一般・マネージャー共通)
-    
     #マネージャー側の操作
     if params[:approval] != nil
       State.updateItem(params[:user_id], params[:period], "承認済み")
-      Report.updateItems_ByManagerUser(params[:user_id], params[:date], params[:period], params[:manager_check_value])
+      Report.updateItems_ByManagerUser(params[:user_id], params[:date], params[:period], filtered_manager_check)
     elsif params[:remand] != nil
       State.updateItem(params[:user_id], params[:period], "編集中")
       logger.debug(params)
-      Report.updateItems_ByManagerUser(params[:user_id], params[:date], params[:period], params[:manager_check_value])
+      Report.updateItems_ByManagerUser(params[:user_id], params[:date], params[:period], filtered_manager_check)
     #一般社員側の操作
     elsif params[:approval_request] != nil
       State.updateItem(params[:user_id], params[:period], "承認依頼中")
