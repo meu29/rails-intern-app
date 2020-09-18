@@ -1,9 +1,10 @@
 require "rails_helper"
 
 #InternAppDatabase_testのusersテーブルが参照される
-
+#discribeはテスト対象のモデル
 RSpec.describe User, type: :model do
-
+  
+  #itは期待する結果
   it "idとnameの値を持つハッシュが一つだけ格納された配列が返されること" do
     user_data = User.getItem("H184200001", "abcdefg")
     expect(user_data).to eq([{"user_id"=>"H184200001", "user_name"=>"横田"}])

@@ -24,7 +24,8 @@ gem 'jbuilder', '~> 2.7'
 gem 'activerecord-import'
 gem 'redis-rails'
 gem 'rspec-rails'
-gem "factory_bot_rails"
+gem 'capybara', '>= 2.15'
+gem 'selenium-webdriver'
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
