@@ -2,12 +2,13 @@
 
 #ActiveRecordも使えるようになる(継承?)
 class User < ApplicationRecord
-    
+
+    #self付きがクラスメソッド、付いてないのがインスタンスメソッド
     def self.getItem(user_id, password)
         
         query = <<-EOS
-          select users.id as user_id, name as user_name from users
-            where users.id = (:user_id) and users.password = (:password)
+          select id as user_id, name as user_name from users
+            where id = (:user_id) and password = (:password)
         EOS
 
         sql = ActiveRecord::Base.sanitize_sql_array([query, user_id: user_id, password: password])

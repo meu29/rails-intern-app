@@ -80,7 +80,8 @@ class UsersController < ApplicationController
         @department_name = user_data["department_name"]
         @period = params[:period]
         @users = User.getItems_withOhterTables(@user_id, @period)
-        
+        logger.debug(@users)
+
         render "users"
 
     end
