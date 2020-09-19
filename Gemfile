@@ -27,6 +27,7 @@ gem 'rspec-rails'
 gem 'capybara', '>= 2.15'
 gem 'selenium-webdriver'
 
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

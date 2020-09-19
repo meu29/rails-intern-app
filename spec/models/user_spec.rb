@@ -3,26 +3,38 @@ require "rails_helper"
 #InternAppDatabase_testのusersテーブルが参照される
 #discribeはテスト対象のモデル
 RSpec.describe User, type: :model do
+
+  user_id = "H184300001"
+  user_name = "佐藤"
+  password = "abcdefg"
+  period = "2020-9"
   
   #itは期待する結果
   it "idとnameの値を持つハッシュが一つだけ格納された配列が返されること" do
-    user_data = User.getItem("H184200001", "abcdefg")
-    expect(user_data).to eq([{"user_id"=>"H184200001", "user_name"=>"横田"}])
+    #user.rbではレコードを追加するメソッドを定義していないので、新しく作る
+    User.new({id: user_id, name: user_name, password: password}).save
+    user_data = User.getItem(user_id, password)
+    expect(user_data).to eq([{"user_id"=>user_id, "user_name"=>user_name}])
   end
 
   it "空の配列が返されること" do
-    user_data = User.getItem("H184300001", "abcdefg") #ユーザーIDがusers内に存在しない
+    #テストでは実際にデータが追加されるわけではない(?)ので、上のテストを実行した後はusersテーブル内にuser_idが存在しない状態
+    user_data = User.getItem(user_id, password)
     expect(user_data).to eq([])
   end
-
+  
+  #空の配列になる
   it "user_id, name, stateの値を持つハッシュが格納された配列が返されること" do
-    users = User.getItems_withOhterTables("H184100001", "2020-9")
-    expect(users).to eq([{"user_id"=>"H184100003", "name"=>"橋本", "state"=>"編集中"}, {"user_id"=>"H184100002", "name"=>"山田", "state"=>"編集中"}, {"user_id"=>"H184100004", "name"=>"川口", "state"=>"編集中"}]) #users[テスト用ユーザーのユーザーID] != nilの方が良い?(データ追加後にこのテストを実行するとエラーになる)
+    User.new({id: user_id, name: user_name, password: password}).save
+    Belong.new({user_id: user_id, manager_user_id: "H184100001", department_id: "A101"}).save
+    State.createItem(user_id, period)
+    users = User.getItems_withOhterTables(user_id, period)
+    expect(users).to eq([{"user_id"=>user_id, "name"=>user_name, "state"=>"編集中"}])
   end
 
   it "空の配列が返されること" do
-    users = User.getItems_withOhterTables("H184100002", "2020-9") #マネージャーではない
+    users = User.getItems_withOhterTables(user_id, period)
     expect(users).to eq([])
   end
-
+  
 end
