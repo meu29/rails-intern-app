@@ -11,14 +11,14 @@
       <p>氏名: <%= @user_name %></p>
       <p>所属: <%= @department_name %></p> 
       <%= form_tag("/report", method: :post) do %>
-        <table border="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
+        <table border="1" cellspacing="0" cellpadding="5" bordercolor="#333333">
           <tr>
             <th>日付</th>
             <th>曜日</th>
             <th>開始時刻</th>
             <th>終了時刻</th>
             <th>休憩時間合計(単位: 分)</th>
-            <th>稼働時間合計(単位: 時)</th>
+            <th>稼働時間合計(半角数字のみ 単位: 時)</th>
             <th>マネージャーチェック</th>
           </tr>
           <% day_count = 0 %>
@@ -79,27 +79,25 @@
         var start_time_array = document.getElementsByName("start_time[]");
         var finish_time_array = document.getElementsByName("finish_time[]");
         var break_time_array = document.getElementsByName("break_time[]");
-        var all_checked = true;
+
+        var checkTimeFormat = function(time) {
+          if (time.length == 5 && time.match(/[0-9]{2}:[0-9]{2}/) != null) {
+            return true;
+          }
+          return false;
+        }
 
         for (var i = 0; i <= start_time_array.length - 1; i++) {
-          //.match()すると引数が検査する文字列がそのまま返されてしまう
-          //alert(isNaN(break_time_array[i].value) == true)
-          if (start_time_array[i].value.length == 5 && finish_time_array[i].value.length == 5) {
+          if (checkTimeFormat(start_time_array[i].value) == true && checkTimeFormat(finish_time_array[i].value) == true && break_time_array[i].value.match(/[^0-9]/) == null) {
             document.getElementsByClassName("table_rows")[i].style.background = "white";
+            document.getElementsByName("approval_request")[0].disabled = "";
+            document.getElementsByName("save")[0].disabled = "";
           } else {
             document.getElementsByClassName("table_rows")[i].style.background = "red";
-            all_checked = false;
+            document.getElementsByName("approval_request")[0].disabled = "disabled";
+            document.getElementsByName("save")[0].disabled = "disabled";
           }
         }
-
-        if (all_checked == true) {
-          disabled = false;
-        } else {
-          disabled = true;
-        }
-
-        document.getElementsByName("approval_request")[0].disabled = disabled;
-        document.getElementsByName("save")[0].disabled = disabled;
 
       }
 
@@ -116,6 +114,10 @@
 
     </script>
     <style>
+      table {
+        width: 1000px;
+        height: 10px;
+      } 
       table th {
         padding: 3px;
       }

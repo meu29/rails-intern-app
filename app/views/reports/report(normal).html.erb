@@ -11,7 +11,7 @@
       <p>氏名: <%= @user_name %></p>
       <p>所属: <%= @department_name %></p> 
       <%= form_tag("/report/" + @user_id, method: :post) do %>
-        <table border="1" width="500" cellspacing="0" cellpadding="5" bordercolor="#333333">
+        <table border="1" cellspacing="0" cellpadding="5" bordercolor="#333333">
           <tr>
             <th>日付</th>
             <th>曜日</th>
@@ -48,6 +48,10 @@
       <% end %>
     </main>
     <style>
+      table {
+        width: 1000px;
+        height: 10px;
+      } 
       table th {
         padding: 3px;
       }
