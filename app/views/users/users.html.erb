@@ -36,6 +36,12 @@
           </tr>
         <% end %>
       </table>
+      <div>
+        <% if @page_index > 1 %>
+          <%= link_to "前の10件", "/users?period=" + @period + "&page=" + (@page_index - 1).to_s %>
+        <% end %>
+        <%= link_to "次の10件", "/users?period=" + @period + "&page=" + (@page_index + 1).to_s %>
+      </div>
     </main>
     <style>
       table th {

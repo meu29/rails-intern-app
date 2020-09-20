@@ -29,7 +29,7 @@ RSpec.describe User, type: :model do
   
   end
   
-  it "新しく追加されたユーザーの情報を含むハッシュを取得すること" do
+  it "ユーザー情報のハッシュを取得すること" do
 
     User.new({id: user_id, name: user_name, password: password}).save
     Belong.new({user_id: user_id, manager_user_id: manager_user_id, department_id: "A101"}).save

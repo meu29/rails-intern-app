@@ -18,16 +18,17 @@ class User < ApplicationRecord
     end
 
     #一般社員一覧を取得
-    def self.getItems_withOhterTables(manager_user_id, period)
+    def self.getItems_withOhterTables(manager_user_id, period, start_index = 1)
 
       query = <<-EOS
         select users.id as user_id, users.name, states.state from users
           inner join (belongs inner join states on belongs.user_id = states.user_id)
           on belongs.user_id = users.id
           where belongs.user_id != (:manager_user_id) and belongs.manager_user_id = (:manager_user_id) and states.period = (:period)
+          limit :start_index, 10
       EOS
 
-      sql = ActiveRecord::Base.sanitize_sql_array([query, manager_user_id: manager_user_id, period: period])
+      sql = ActiveRecord::Base.sanitize_sql_array([query, manager_user_id: manager_user_id, period: period, start_index: (start_index  - 1) * 10])
       
       return ActiveRecord::Base.connection.select_all(sql).to_a
 

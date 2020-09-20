@@ -79,7 +79,33 @@ class UsersController < ApplicationController
         @user_id = user_data["user_id"]
         @department_name = user_data["department_name"]
         @period = params[:period]
-        @users = User.getItems_withOhterTables(@user_id, @period)
+
+        @page_index = params[:page]
+
+        if @page_index == nil
+            @page_index = 1
+        else
+            @page_index = @page_index.to_i
+        end
+ 
+        '''テスト用にユーザーを大量追加
+        users_data_array = []
+        belongs_data_array = []
+        states_data_array = []
+    
+        (10..99).each do |num|
+          new_user_id = "H1841000" + num.to_s
+          users_data_array.push({id: new_user_id, name: "テストユーザー" + num.to_s, password: "aiueo"})
+          belongs_data_array.push({user_id: new_user_id, manager_user_id: @user_id, department_id: "A101"})
+          states_data_array.push({user_id: new_user_id, period: @period, state: "編集中"})
+        end
+        
+        User.import(users_data_array)
+        Belong.import(belongs_data_array)
+        State.import(states_data_array)
+        '''
+
+        @users = User.getItems_withOhterTables(@user_id, @period, @page_index)
 
         render "users"
 
