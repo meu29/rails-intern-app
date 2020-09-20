@@ -53,19 +53,27 @@ class Report < ApplicationRecord
   def self.updateItems_ByNormalUser(user_id, date_array, period, start_time_array, finish_time_array, break_time_array)
 
     (0..start_time_array.length - 1).each do |i|
-      if start_time_array[i].length == 5 and finish_time_array[i].length == 5
-        working_time = (Time.parse(finish_time_array[i]) - Time.parse(start_time_array[i])) / 3600
-        working_time -= break_time_array[i].to_i / 60
-        query = <<-EOS
-         update reports set start_time = (:start_time), finish_time = (:finish_time), break_time = (:break_time), working_time = (:working_time)
-          where user_id = (:user_id) and date = (:date) and period = (:period)
-        EOS
-        sql = ActiveRecord::Base.sanitize_sql_array([query, start_time: start_time_array[i], finish_time: finish_time_array[i], break_time: break_time_array[i], working_time: working_time, user_id: user_id, date: date_array[i], period: period])
-        ActiveRecord::Base.connection.execute(sql)
-      end
-    end
 
-    return
+      working_time = (Time.parse(finish_time_array[i]) - Time.parse(start_time_array[i])) / 3600
+      working_time -= break_time_array[i].to_f / 60.0
+      
+      #開始時刻と終了時刻を逆にする、勤務時間よりも休憩時間の方が多いといった入力ミスなど
+      if working_time < 0
+        start_time_array[i] = "00:00"
+        finish_time_array[i] = "00:00"
+        break_time_array[i] = 0
+        working_time = 0
+      end
+        
+      query = <<-EOS
+        update reports set start_time = (:start_time), finish_time = (:finish_time), break_time = (:break_time), working_time = (:working_time)
+          where user_id = (:user_id) and date = (:date) and period = (:period)
+      EOS
+      
+      sql = ActiveRecord::Base.sanitize_sql_array([query, start_time: start_time_array[i], finish_time: finish_time_array[i], break_time: break_time_array[i], working_time: working_time, user_id: user_id, date: date_array[i], period: period])
+      ActiveRecord::Base.connection.execute(sql)
+    
+    end
 
   end
 

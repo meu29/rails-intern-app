@@ -18,10 +18,11 @@
             <th>開始時刻</th>
             <th>終了時刻</th>
             <th>休憩時間(単位: 分)</th>
-            <th>稼働時間(単位: 時)</th>
+            <th>稼働時間</th>
             <th>マネージャーチェック</th>
           </tr>
-          <% index = 0 %>
+          <% day_count = 0 %>
+          <% working_date_sum = 0 %>
           <% @report_data_array.each do |report_data| %>
             <%= hidden_field_tag "date[]", report_data["date"] %>
         　  <tr>
@@ -37,13 +38,27 @@
                   <% end %>
                 <% elsif key == "start_time" or key == "finish_time" %>
                   <td><%= report_data[key].strftime("%H:%M") %></td>
+                <% elsif key == "working_time" %>
+                  <% if report_data[key] > 0 %>
+                    <% day_count += 1 %>
+                    <% working_date_sum += report_data[key] %>
+                  <% end %>
+                  <% hours = report_data["working_time"].floor %>
+                  <% minutes = (report_data["working_time"] - hours) * 60 %>
+                  <td><%= hours.to_s + "時間" + minutes.ceil.to_s + "分" %></td>
                 <% else %>
                   <td><%= report_data[key] %></td>
                 <% end %>
               <% end %> 
             </tr>
-            <% index += 1 %>
-          <% end %> 
+          <% end %>
+          <tr>
+          　<td>合計</td>
+            <td><%= day_count.to_s + "日" %></td>
+            <% hours = working_date_sum.floor %>
+            <% minutes = (working_date_sum - hours) * 60 %>
+            <td><%= hours.to_s + "時間" + minutes.ceil.to_s + "分" %></td>
+          <tr>
         </table>
         <%= hidden_field_tag "user_id", @user_id %>
         <%= hidden_field_tag "period", @period %>
