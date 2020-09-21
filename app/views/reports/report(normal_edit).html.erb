@@ -15,10 +15,10 @@
           <tr>
             <th>日付</th>
             <th>曜日</th>
-            <th>開始時刻</th>
-            <th>終了時刻</th>
-            <th>休憩時間合計(半角数字のみ  単位: 分)</th>
-            <th>稼働時間合計(単位: 時)</th>
+            <th>開始時刻<br>(休みの日は00:00)</th>
+            <th>終了時刻<br>(休みの日は00:00)</th>
+            <th>休憩時間合計<br>(単位: 分)</th>
+            <th>稼働時間合計</th>
             <th>マネージャーチェック</th>
           </tr>
           <% day_count = 0 %>
@@ -44,7 +44,7 @@
                     <td>◯</td>
                   <% else %>
                     <!-- normalでは"未確認" -->
-                    <td>不備あり</td>
+                    <td>未入力・不備あり</td>
                   <% end %>
                 <% else %>
                   <td><%= report_data[key] %></td>
@@ -88,16 +88,19 @@
         }
 
         for (var i = 0; i <= start_time_array.length - 1; i++) {
+          //形式が正しくなかった時点でチェックが停止(修正後にまたチェックするので一度に全てを検査する必要はない)
           if (checkTimeFormat(start_time_array[i].value) == true && checkTimeFormat(finish_time_array[i].value) == true && break_time_array[i].value.match(/[^0-9]/) == null) {
             document.getElementsByClassName("table_rows")[i].style.background = "white";
-            document.getElementsByName("approval_request")[0].disabled = "";
-            document.getElementsByName("save")[0].disabled = "";
           } else {
             document.getElementsByClassName("table_rows")[i].style.background = "red";
             document.getElementsByName("approval_request")[0].disabled = "disabled";
             document.getElementsByName("save")[0].disabled = "disabled";
+            return;
           }
         }
+
+        document.getElementsByName("approval_request")[0].disabled = "";
+        document.getElementsByName("save")[0].disabled = "";
 
       }
 
@@ -115,7 +118,7 @@
     </script>
     <style>
       table {
-        width: 1000px;
+        width: 950px;
         height: 10px;
       } 
       table th {
