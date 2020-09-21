@@ -88,7 +88,7 @@ class UsersController < ApplicationController
             @page_index = @page_index.to_i
         end
  
-        '''テスト用にユーザーを大量追加
+        '''テスト用にユーザーを大量追加(一回だけ実行して後はコメントアウト)
         users_data_array = []
         belongs_data_array = []
         states_data_array = []
