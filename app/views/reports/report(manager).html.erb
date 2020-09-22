@@ -7,18 +7,20 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
-      <p><%= @period %>勤怠報告</p>
-      <p>氏名: <%= @user_name %></p>
-      <p>所属: <%= @department_name %></p>  
+      <div id="reporter_info">
+        <p><%= @period %>勤怠報告</p>
+        <p>氏名: <%= @user_name %></p>
+        <p>所属: <%= @department_name %></p>  
+      </div>
     　<%= form_tag("/report", method: :post) do %>
         <table border="1" cellspacing="0" cellpadding="5" bordercolor="#333333">
           <tr>
             <th>日付</th>
             <th>曜日</th>
-            <th>開始時刻</th>
-            <th>終了時刻</th>
-            <th>休憩時間(単位: 分)</th>
-            <th>稼働時間</th>
+            <th>開始時刻<br>(休みの日は00:00)</th>
+            <th>終了時刻<br>(休みの日は00:00)</th>
+            <th>休憩時間合計<br>(単位: 分)</th>
+            <th>稼働時間合計</th>
             <th>マネージャーチェック</th>
           </tr>
           <% day_count = 0 %>
@@ -62,7 +64,7 @@
         </table>
         <%= hidden_field_tag "user_id", @user_id %>
         <%= hidden_field_tag "period", @period %>
-        <div>
+        <div id="button_area">
           <input type="button" value="チェックテスト" onClick="test()" %>
           <input type="button" value="チェック漏れ確認" onClick="check()" %>
           <%= submit_tag "承認", name:"approval", disabled: true %>
@@ -108,14 +110,67 @@
 
     </script>
     <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+      body {
+        background: gainsboro;
+      }
+      header {
+        color: white;
+        background: teal;
+        margin-bottom: 10px;
+        font-size: 18px;
+        padding: 7px;
+      }
+      main {
+        background: white;
+      }
+      div#reporter_info {
+        font-size: 20px; 
+        margin-bottom: 10px; 
+        text-align: center;
+      }
       table {
+        margin-left: 5%;
+        text-align: center;
         width: 1000px;
         height: 10px;
+        margin-bottom: 10px;
       } 
       table th {
         padding: 3px;
+        color: white;
+        background: aqua;
       }
       table td {
+        padding: 3px;
+      }
+      div#button_area {
+        text-align: center;
+      }
+      input[type=button] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
+
+      }
+      input[type=submit] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
         padding: 3px;
       }
     </style>

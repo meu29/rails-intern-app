@@ -8,8 +8,11 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
-      <p>氏名: <%= @user_name %></p>
-      <p>所属: <%= @department_name %></p>
+      <div id="user_info">
+        <p>報告者一覧</p>
+        <p>氏名: <%= @user_name %></p>
+        <p>所属: <%= @department_name %></p>
+      </div>
       <table border="1" cellspacing="0" cellpadding="5" bordercolor="#333333">
         <tr>
           <th>社員番号</th>
@@ -38,7 +41,7 @@
           </tr>
         <% end %>
       </table>
-      <div>
+      <div id="pages">
         <% if @page_index > 1 %>
           <%= link_to "前の10件", "/users?period=" + @period + "&page=" + (@page_index - 1).to_s %>
         <% end %>
@@ -48,19 +51,69 @@
       </div>
     </main>
     <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+      body {
+        background: gainsboro;
+      }
+      header {
+        color: white;
+        background: teal;
+        margin-bottom: 10px;
+        font-size: 18px;
+        padding: 7px;
+      }
+      main {
+        background: white;
+      }
+      div#user_info {
+        font-size: 20px; 
+        margin-bottom: 20px; 
+        text-align: center;
+      }
+      div#pages {
+        text-align: center;
+      }
       table {
+        margin-left: 5%;
+        text-align: center;
         width: 1000px;
         height: 10px;
+        margin-bottom: 10px;
       } 
       table th {
         padding: 3px;
+        color: white;
+        background: aqua;
       }
       table td {
         padding: 3px;
       }
-      /* <tr></tr>の幅に合わせる */
+      input[type=button] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
+
+      }
       input[type=submit] {
-        width: 100%
+        width: 100%;
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
       }
     </style>
   </body>

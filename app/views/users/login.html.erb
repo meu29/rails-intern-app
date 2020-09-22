@@ -8,11 +8,51 @@
     </header>
     <main>
       <p><%= @message %></p>
-      <form action="/login" method="post">
-        <p><input name="user_id" type="text" placeholder="ユーザーID"></p>
-        <p><input name="password" type="text" placeholder="パスワード"></p>
-        <input type="submit" value="ログイン">
-      </form>
+      <div id="form_area">
+        <form action="/login" method="post">
+          <p><input name="user_id" type="text" placeholder="ユーザーID"></p>
+          <p><input name="password" type="text" placeholder="パスワード"></p>
+          <input type="submit" value="ログイン">
+        </form>
+      </div>
     </main>
+        <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+      body {
+        background: gainsboro;
+      }
+      header {
+        color: white;
+        background: teal;
+        margin-bottom: 10px;
+        font-size: 18px;
+        padding: 7px;
+      }
+      main {
+        background: white;
+      }
+      div#form_area {
+        font-size: 20px; 
+        text-align: center;
+        padding: 10px;
+      }
+      input[type=text] {
+        font-size: 20px;
+      }
+      input[type=submit] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
+      }
+    </style>
   </body>
 </html>

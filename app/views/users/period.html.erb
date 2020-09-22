@@ -7,17 +7,56 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
-      <p>勤怠報告期間選択</p>
-      <p>氏名: <%= @user_name %></p>
-      <p>所属: <%= @department_name %></p>
-      <%= form_tag(@path, method: :get) do %>
-        <%= select_tag "period", options_for_select(@period_array) %>
-        <%= hidden_field_tag "user_id", @user_id %>
-        <%= submit_tag "決定" %>
-      <% end %>
-      <form action="/logout" method="post">
-        <input type="submit" value="ログアウト">
-      </form>
+      <div id="user_info">
+        <p>勤怠報告期間選択</p>
+        <p>氏名: <%= @user_name %></p>
+        <p>所属: <%= @department_name %></p>
+      </div>
+      <div id="select">
+        <%= form_tag(@path, method: :get) do %>
+          <%= select_tag "period", options_for_select(@period_array) %>
+          <%= hidden_field_tag "user_id", @user_id %>
+          <%= submit_tag "決定" %>
+        <% end %>
+      </div>
     </main>
+    <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+      body {
+        background: gainsboro;
+      }
+      header {
+        color: white;
+        background: teal;
+        margin-bottom: 10px;
+        font-size: 18px;
+        padding: 7px;
+      }
+      main {
+        background: white;
+      }
+      div#user_info {
+        font-size: 20px; 
+        margin-bottom: 20px; 
+        text-align: center;
+      }
+      div#select {
+        text-align: center;
+      }
+      input[type=submit] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
+      }
+    </style>
   </body>
 </html>

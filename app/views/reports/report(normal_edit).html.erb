@@ -7,10 +7,12 @@
       <p>勤怠管理システム</p>
     </header>
     <main>
-      <p><%= @period %>勤怠報告</p>
-      <p>氏名: <%= @user_name %></p>
-      <p>所属: <%= @department_name %></p> 
-      <%= form_tag("/report", method: :post) do %>
+      <div id="reporter_info">
+        <p><%= @period %>勤怠報告</p>
+        <p>氏名: <%= @user_name %></p>
+        <p>所属: <%= @department_name %></p> 
+      </div>
+     <%= form_tag("/report", method: :post) do %>
         <table border="1" cellspacing="0" cellpadding="5" bordercolor="#333333">
           <tr>
             <th>日付</th>
@@ -61,7 +63,7 @@
             <td><%= hours.to_s + "時間" + minutes.ceil.to_s + "分" %></td>
           <tr>
         </table>
-        <div>
+        <div id="button_area">
           <input type="button" value="入力テスト" onClick="test()" %>
           <input type="button" value="入力形式チェック" onClick="checkFormat()" %>
           <%= hidden_field_tag "user_id", @user_id %>
@@ -117,14 +119,67 @@
 
     </script>
     <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+      body {
+        background: gainsboro;
+      }
+      main {
+        background: white;
+      }
+      header {
+        color: white;
+        background: teal;
+        margin-bottom: 10px;
+        font-size: 18px;
+        padding: 7px;
+      }
+      div#reporter_info {
+        font-size: 20px; 
+        margin-bottom: 10px; 
+        text-align: center;
+      }
       table {
-        width: 950px;
+        margin-left: 5%;
+        text-align: center;
+        width: 1000px;
         height: 10px;
+        margin-bottom: 10px;
       } 
       table th {
         padding: 3px;
+        color: white;
+        background: aqua;
       }
       table td {
+        padding: 3px;
+      }
+      div#button_area {
+        text-align: center;
+      }
+      input[type=button] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
+
+      }
+      input[type=submit] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
         padding: 3px;
       }
     </style>
