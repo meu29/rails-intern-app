@@ -20,13 +20,13 @@
           <%= submit_tag "決定" %>
         <% end %>
       </div>
-      <div id="changePasswordArea">
+      <!--div id="changePasswordArea">
         <%= form_tag("/changePassword", method: :post) do %> 
           <%= hidden_field_tag "user_id", @user_id %>
           <p><%= label_tag "新しいパスワードを入力" %><%= text_field_tag "new_password" %></p>
           <%= submit_tag "パスワードを変更する" %>
         <% end %>
-      </div>
+      </div-->
     </main>
     <style>
       * {
@@ -39,12 +39,13 @@
       header {
         color: white;
         background: teal;
-        margin-bottom: 10px;
+        margin-bottom: 30px;
         font-size: 18px;
         padding: 7px;
       }
       main {
         background: white;
+        padding: 10px;
       }
       div#user_info {
         font-size: 20px; 

@@ -106,7 +106,7 @@ class UsersController < ApplicationController
         @user_id = user_data["user_id"]
         @department_name = user_data["department_name"]
         @period = params[:period]
-
+        @state = params[:state]
         @page_index = params[:page]
 
         if @page_index == nil
@@ -115,7 +115,7 @@ class UsersController < ApplicationController
             @page_index = @page_index.to_i
         end
 
-        @users = User.getItems_withOhterTables(@user_id, @period, params[:state], @page_index)
+        @users = User.getItems_withOhterTables(@user_id, @period, @state, @page_index)
 
         render "users"
 

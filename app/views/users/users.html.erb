@@ -53,10 +53,10 @@
       </div>
       <div id="pages">
         <% if @page_index > 1 %>
-          <%= link_to "前の10件", "/users?period=" + @period + "&page=" + (@page_index - 1).to_s %>
+          <%= link_to "前の10件", "/users?period=" + @period + "&page=" + (@page_index - 1).to_s + "&state=" + @state %>
         <% end %>
         <% if @users.size == 10 %>
-          <%= link_to "次の10件", "/users?period=" + @period + "&page=" + (@page_index + 1).to_s %>
+          <%= link_to "次の10件", "/users?period=" + @period + "&page=" + (@page_index + 1).to_s + "&state=" + @state %>
         <% end %>
         <%= link_to "期間選択画面に戻る", "/period" %>
       </div>
@@ -72,12 +72,13 @@
       header {
         color: white;
         background: teal;
-        margin-bottom: 10px;
+        margin-bottom: 30px;
         font-size: 18px;
         padding: 7px;
       }
       main {
         background: white;
+        padding: 10px;
       }
       div#user_info {
         font-size: 20px; 
