@@ -5,7 +5,13 @@ class ReportsController < ApplicationController
   protect_from_forgery
 
   def onGetReport
-    
+
+    session_data = Redis.current.get("user_data")
+
+    if session_data == nil 
+        return redirect_to controller: "users", action: "onGetLogin"
+    end
+
     #ここでセッションを使ってはいけない
     @user_id = params[:user_id]
     @period = params[:period]
@@ -16,10 +22,10 @@ class ReportsController < ApplicationController
     @report_data_array = Report.getItems(@user_id, @period)
     state = State.getItem(@user_id, @period)[0]["state"]
 
-    session_data = JSON.parse(Redis.current.get("user_data"))
+    session_data = JSON.parse(session_data)
 
     if session_data["user_id"] == values["manager_user_id"]
-      user_data_array = User.getItems_withOhterTables(values["manager_user_id"], @period)
+      user_data_array = User.getItems_withOhterTables(values["manager_user_id"], @period, "全て")
       (0..user_data_array.length - 1).each do |i|
         if user_data_array[i]["user_id"] == @user_id
           @user_name = user_data_array[i]["name"]
@@ -39,6 +45,12 @@ class ReportsController < ApplicationController
   end
 
   def onPostReport
+
+    session_data = Redis.current.get("user_data")
+
+    if session_data == nil 
+        return redirect_to controller: "users", action: "onGetLogin"
+    end
 
     manager_check = params[:manager_check]
 

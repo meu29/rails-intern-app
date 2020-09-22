@@ -17,7 +17,7 @@ RSpec.describe User, type: :model do
     #user.rbではレコードを追加するメソッドを定義していないので、新しく作る
     User.new({id: user_id, name: user_name, password: password}).save
     user_data = User.getItem(user_id, password)
-    expect(user_data).to eq([{"user_id"=>user_id, "user_name"=>user_name}])
+    expect(user_data).to eq([{"user_id"=>user_id, "user_name"=>user_name, "password"=>password}])
   
   end
 
@@ -46,6 +46,15 @@ RSpec.describe User, type: :model do
     users = User.getItems_withOhterTables(user_id, period)
     expect(users).to eq([])
   
+  end
+
+  it "レコードが変更されること" do
+
+    User.new({id: user_id, name: user_name, password: password}).save
+    User.updateItem(user_id, "raspberry")
+    user_data = User.getItem(user_id, "raspberry")
+    expect(user_data).to eq([{"user_id"=>user_id, "user_name"=>user_name}])
+
   end
   
 end

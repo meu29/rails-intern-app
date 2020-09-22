@@ -31,7 +31,7 @@
                   <%= form_tag("/report", method: :get) do %>
                     <%= hidden_field_tag "user_id", user["user_id"] %>
                     <%= hidden_field_tag "period", @period %>
-                    <%= submit_tag "報告を表示する" %>
+                    <%= submit_tag "報告を表示する", {id: "searchReports"} %>
                   <% end %>
                 </div>
               </td>
@@ -41,6 +41,16 @@
           </tr>
         <% end %>
       </table>
+      <div id="states">
+        <%= form_tag("/users", method: :get) do %>
+        　<% ["全て", "編集中", "承認依頼中", "承認済み"].each do |state| %> 
+        　　<%= radio_button_tag "state", state %>
+            <%= label_tag "state", state, class: "state_label" %>
+          <% end %>
+          <%= hidden_field_tag "period", @period %>
+          <%= submit_tag "絞り込み検索" %>
+        <% end %>
+      </div>
       <div id="pages">
         <% if @page_index > 1 %>
           <%= link_to "前の10件", "/users?period=" + @period + "&page=" + (@page_index - 1).to_s %>
@@ -48,6 +58,7 @@
         <% if @users.size == 10 %>
           <%= link_to "次の10件", "/users?period=" + @period + "&page=" + (@page_index + 1).to_s %>
         <% end %>
+        <%= link_to "期間選択画面に戻る", "/period" %>
       </div>
     </main>
     <style>
@@ -70,6 +81,11 @@
       }
       div#user_info {
         font-size: 20px; 
+        margin-bottom: 20px; 
+        text-align: center;
+      }
+      div#states {
+        font-size: 18px; 
         margin-bottom: 20px; 
         text-align: center;
       }
@@ -101,10 +117,8 @@
         font-size: 15px;
         font-weight: bold;
         padding: 3px;
-
       }
       input[type=submit] {
-        width: 100%;
         color: white;
         background: cornflowerblue;
         border-radius: 5px;
@@ -114,6 +128,13 @@
         font-size: 15px;
         font-weight: bold;
         padding: 3px;
+      }
+      input#searchReports {
+        width: 100%;
+      }
+      input[type=radio] {
+        margin-left: 1.5px;
+        margin-right: 3px;
       }
     </style>
   </body>

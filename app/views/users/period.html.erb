@@ -15,8 +15,16 @@
       <div id="select">
         <%= form_tag(@path, method: :get) do %>
           <%= select_tag "period", options_for_select(@period_array) %>
+          <%= hidden_field_tag "state", "全て" %>
           <%= hidden_field_tag "user_id", @user_id %>
           <%= submit_tag "決定" %>
+        <% end %>
+      </div>
+      <div id="changePasswordArea">
+        <%= form_tag("/changePassword", method: :post) do %> 
+          <%= hidden_field_tag "user_id", @user_id %>
+          <p><%= label_tag "新しいパスワードを入力" %><%= text_field_tag "new_password" %></p>
+          <%= submit_tag "パスワードを変更する" %>
         <% end %>
       </div>
     </main>
@@ -45,6 +53,10 @@
       }
       div#select {
         text-align: center;
+        margin-bottom: 30px;
+      }
+      div#changePasswordArea {
+        text-align: center;
       }
       input[type=submit] {
         color: white;
@@ -52,7 +64,16 @@
         border-radius: 5px;
         border: none;
         margin-left: 3px;
-        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
+      }
+      input[type=button] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
         font-size: 15px;
         font-weight: bold;
         padding: 3px;
