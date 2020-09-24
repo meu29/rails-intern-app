@@ -8,7 +8,7 @@
     </header>
     <main>  
       <div id="reporter_info">
-        <p><%= @period %>勤怠報告</p>
+        p><%= @period.split("-").join("年") + "月 " %>勤怠報告</p>
         <p>氏名: <%= @user_name %></p>
         <p>所属: <%= @department_name %></p> 
       </div>

@@ -8,7 +8,7 @@
     </header>
     <main>
       <div id="reporter_info">
-        <p><%= @period %>勤怠報告</p>
+        <p><%= @period.split("-").join("年") + "月 " %>勤怠報告</p>
         <p>氏名: <%= @user_name %></p>
         <p>所属: <%= @department_name %></p>  
       </div>
@@ -60,12 +60,11 @@
             <% hours = working_date_sum.floor %>
             <% minutes = (working_date_sum - hours) * 60 %>
             <td><%= hours.to_s + "時間" + minutes.ceil.to_s + "分" %></td>
-          <tr>
+          </tr>
         </table>
         <%= hidden_field_tag "user_id", @user_id %>
         <%= hidden_field_tag "period", @period %>
         <div id="button_area">
-          <input type="button" value="チェックテスト" onClick="test()" %>
           <input type="button" value="チェック漏れ確認" onClick="check()" %>
           <%= submit_tag "承認", name:"approval", disabled: true %>
           <%= submit_tag "差し戻し", name:"remand" %>
@@ -78,32 +77,18 @@
       function check() {
 
         var checkbox = document.getElementsByClassName("check");
-        var all_checked = true;
 
         for (var i = 0; i <= checkbox.length - 1; i++) {
           if (checkbox[i].childNodes[0].checked == false) {
             document.getElementsByClassName("check")[i].style.background = "red";
-            all_checked = false;
+            document.getElementsByName("approval")[0].style.background = "gray";
+            document.getElementsByName("approval")[0].disabled = true;
+            return;
           } else {
             document.getElementsByClassName("check")[i].style.background = "white";
+            document.getElementsByName("approval")[0].style.background = "cornflowerblue";
+            document.getElementsByName("approval")[0].disabled = false;
           }
-        }
-        
-        if (all_checked == true) {
-          document.getElementsByName("approval")[0].disabled = false;
-        } else {
-          document.getElementsByName("approval")[0].disabled = true;
-        }
-
-      }
-
-      //テスト用
-      function test() {
-
-        var checkbox = document.getElementsByClassName("check");
-
-        for (var i = 0; i <= checkbox.length - 1; i++) {
-          document.getElementsByClassName("check")[i].childNodes[0].checked = true;
         }
 
       }
@@ -161,7 +146,6 @@
         font-size: 15px;
         font-weight: bold;
         padding: 3px;
-
       }
       input[type=submit] {
         color: white;
@@ -173,6 +157,9 @@
         font-size: 15px;
         font-weight: bold;
         padding: 3px;
+      }
+      input[name=approval] {
+        background: gray;
       }
     </style>
   </body>

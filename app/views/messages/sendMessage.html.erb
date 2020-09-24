@@ -1,0 +1,113 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <p>勤怠管理システム</p>
+    </header>
+    <main>
+      <%= hidden_field_tag "from_user_id", @user_id %>
+      <div id="app"></div>
+    </main>
+    <script type="text/babel">
+
+      class App extends React.Component {
+
+          constructor(props) {
+            super(props);
+            this.state = {"messages": []};
+            this.getMessages = this.getMessages.bind(this);
+            this.sendMessage = this.sendMessage.bind(this);
+          }
+
+          getMessages() {
+
+              fetch("http://localhost:3000/getMessages?user_id=" + document.getElementById("from_user_id").value)
+              .then((res) => res.json())
+              .then((res) => this.setState({"messages": res}))
+              .catch((error) => alert(error))
+
+          }
+
+          sendMessage() {
+
+            var body = JSON.stringify({
+              "from_user_id": document.getElementsByName("from_user_id")[0].value,
+              "to_user_id": document.getElementsByName("to_user_id")[0].value,
+              "message": document.getElementsByName("message")[0].value,
+              "date": "2020-01-11 11:38:11"//new Date()
+            });
+
+            document.getElementsByName("message")[0].value = "";
+            
+            var opt = {
+              method: "post",
+              headers: {"Content-Type": "application/json"},
+              body: body
+            };
+
+            fetch("http://localhost:3000/sendMessage", opt)
+            .then((res) => res.json())
+            .then((res) => alert(JSON.stringify(res)))
+            .catch((error) => alert(error)) 
+
+          }
+
+          render() {
+            return (
+              <div>
+                <div id="sendMessageArea">
+                  <p>メッセージを送信</p>
+                  <p><label>送信先ユーザーID</label><input type="text" name="to_user_id" /></p>
+                  <textarea name="message" placeholder="メッセージを入力"></textarea>
+                  <input type="button" value="送信" onClick={this.sendMessage} />
+                </div>
+                <div>
+                  <p>受信したメッセージ</p>
+                  <input type="button" value="更新" onClick={this.getMessages} />
+                  {this.state.messages.map(function(message) {
+                    return (<p>{message}</p>);
+                  })}
+                </div>
+              </div>
+            )
+          }
+
+      }
+
+      ReactDOM.render(<App />, document.getElementById("app")); 
+    
+    </script>
+    <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+      body {
+        background: gainsboro;
+      }
+      header {
+        color: white;
+        background: teal;
+        margin-bottom: 30px;
+        font-size: 18px;
+        padding: 7px;
+      }
+      main {
+        background: white;
+        padding: 10px;
+      }
+      div#sendMessageArea {
+        text-align: center;
+      }
+      textarea {
+        width: 75%;
+      }
+    </style>
+  <body>
+</html>

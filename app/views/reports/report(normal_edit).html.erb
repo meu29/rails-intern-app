@@ -8,7 +8,7 @@
     </header>
     <main>
       <div id="reporter_info">
-        <p><%= @period %>勤怠報告</p>
+        <p><%= @period.split("-").join("年") + "月 " %>勤怠報告</p>
         <p>氏名: <%= @user_name %></p>
         <p>所属: <%= @department_name %></p> 
       </div>
@@ -64,7 +64,6 @@
           <tr>
         </table>
         <div id="button_area">
-          <input type="button" value="入力テスト" onClick="test()" %>
           <input type="button" value="入力形式チェック" onClick="checkFormat()" %>
           <%= hidden_field_tag "user_id", @user_id %>
           <%= hidden_field_tag "period", @period %>
@@ -95,25 +94,18 @@
             document.getElementsByClassName("table_rows")[i].style.background = "white";
           } else {
             document.getElementsByClassName("table_rows")[i].style.background = "red";
-            document.getElementsByName("approval_request")[0].disabled = "disabled";
-            document.getElementsByName("save")[0].disabled = "disabled";
+            document.getElementsByName("approval_request")[0].disabled = true;
+            document.getElementsByName("approval_request")[0].style.background = "gray";
+            document.getElementsByName("save")[0].disabled = true;
+            document.getElementsByName("save")[0].style.background = "gray";
             return;
           }
         }
 
-        document.getElementsByName("approval_request")[0].disabled = "";
-        document.getElementsByName("save")[0].disabled = "";
-
-      }
-
-      //テスト用
-      function test() {
-
-        for (var i = 0; i <= document.getElementsByName("start_time[]").length - 1; i++) {
-          document.getElementsByName("start_time[]")[i].value = "12:00";
-          document.getElementsByName("finish_time[]")[i].value = "19:00";
-          document.getElementsByName("break_time[]")[i].value = 60;
-        }
+        document.getElementsByName("approval_request")[0].disabled = false;
+        document.getElementsByName("approval_request")[0].style.background = "cornflowerblue";
+        document.getElementsByName("save")[0].disabled = false;
+        document.getElementsByName("save")[0].style.background = "cornflowerblue";
 
       }
 
@@ -182,6 +174,12 @@
         font-size: 15px;
         font-weight: bold;
         padding: 3px;
+      }
+      input[name=approval_request] {
+        background: gray;
+      }
+      input[name=save] {
+        background: gray;
       }
     </style>
   </body>

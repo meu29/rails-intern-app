@@ -26,6 +26,9 @@ gem 'redis-rails'
 gem 'rspec-rails'
 gem 'capybara', '>= 2.15'
 gem 'selenium-webdriver'
+gem 'unicorn'
+gem 'execjs'
+gem 'therubyracer'
 
 
 # Use Active Storage variant
