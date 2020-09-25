@@ -10,10 +10,18 @@ class Message < ApplicationRecord
     
     end
 
-    def self.getItems(to_user_id)
+    def self.getItems(user_id, user_id_type)
 
-        query = "select * from messages where to_user_id = (:to_user_id)"
-        sql = ActiveRecord::Base.sanitize_sql_array([query, to_user_id: to_user_id])
+        query = "select users.name, messages.message, messages.date from messages inner join users"
+
+        #where from_user_id = (:user_id) or to_user_id = (:user_id)だと分けるのが面倒なので1回の実行につき片方のみ取得
+        if user_id_type == "from_user_id"
+            query += " on messages.to_user_id = users.id where from_user_id = (:user_id)"
+        else
+            query += " on messages.from_user_id = users.id where to_user_id = (:user_id)"
+        end
+
+        sql = ActiveRecord::Base.sanitize_sql_array([query, user_id: user_id])
         
         return ActiveRecord::Base.connection.select_all(sql).to_a
 

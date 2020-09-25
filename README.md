@@ -9,10 +9,10 @@ railsで勤怠管理アプリを作る
 ・スペック -> テストコード(model名_spec.rbなど)のこと<br>
 ・マッチャ -> 期待する結果とテスト結果が一致するかを判定する(オブジェクト?)
 eq, include,..の部分(expectはマッチャではない?) <br>
-・nginx導入参考 https://qiita.com/corona6@github/items/cfac19432532d261912d<br>
-起動しなければ<br>
-access_log      /var/www/test/logs/access.log;<br>
-error_log       /var/www/test/logs/error.log;<br>
-の部分を消す<br>
-・Unicorn -> nginx(webサーバー)とrack(アプリケーションサーバー、railsが動いてる場所)を仲介する?
-・Unicorn終了時 -> kill -QUIT 6612
+・puma-> nginx(webサーバー)とrack(アプリケーションサーバー、railsが動いてる場所)を仲介する?<br>
+=>localhost:80でアプリ画面が表示されればnginx+pumaでの実行に成功?<br>
+・nginx+puma導入参考 https://qiita.com/h4n24w4/items/95347fff33c894d5848a<br>
+・puma.sock -> rails sすると自動で作成<br>
+=>/var/www/RailsInternApp/tmp/sockets/puma.sockが見つからないエラー -> ディレクトリ/var/www/RailsInternApp/tmp/socketsをmkdirで作成<br>
+・プロキシサーバー -> クライアントとサーバーを仲介<br>
+・We're sorry, but something went wrongエラー -> /RailsInternApp/log/production.log(development.log)を見る<br>
