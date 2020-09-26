@@ -1,5 +1,8 @@
 railsで勤怠管理アプリを作る
 
+![画像](https://imgur.com/a/mAwZ441)
+
+
 ##やること・メモ
 ・intern_db.dumpをsqlにインポート <br>
  sudo mysql -u newuser -p import先データベース名 < '/home/meu/ドキュメント/RailsInternApp/intern_db.dump' <br>
