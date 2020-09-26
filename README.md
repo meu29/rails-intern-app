@@ -1,7 +1,6 @@
 railsで勤怠管理アプリを作る
 
-![画像](https://imgur.com/a/mAwZ441)
-
+![スクリーンショット 2020-09-26 21-18-32](https://user-images.githubusercontent.com/39718781/94340660-88eae580-003e-11eb-9777-48367aa45bb9.png)
 
 ##やること・メモ
 ・intern_db.dumpをsqlにインポート <br>
