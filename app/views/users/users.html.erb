@@ -4,9 +4,7 @@
     <meta charset="utf-8">
   </head>
   <body>
-    <header>
-      <p>勤怠管理システム</p>
-    </header>
+    <%= render "shared/header", login_page: false %>
     <main>
       <div id="user_info">
         <p>報告者一覧</p>
@@ -58,6 +56,7 @@
         <% if @users.size == 10 %>
           <%= link_to "次の10件", "/users?period=" + @period + "&page=" + (@page_index + 1).to_s + "&state=" + @state %>
         <% end %>
+        <%= link_to "所属メンバーを編集する", "/member" %>
         <%= link_to "期間選択画面に戻る", "/period" %>
       </div>
     </main>
@@ -68,13 +67,6 @@
       }
       body {
         background: gainsboro;
-      }
-      header {
-        color: white;
-        background: teal;
-        margin-bottom: 30px;
-        font-size: 18px;
-        padding: 7px;
       }
       main {
         background: white;

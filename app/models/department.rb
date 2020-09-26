@@ -1,5 +1,14 @@
 class Department < ApplicationRecord
 
+    def self.getItem(name)
+
+      query = "select id from departments where name = (:name)"
+
+      sql = ActiveRecord::Base.sanitize_sql_array([query, name: name])
+      return ActiveRecord::Base.connection.select_all(sql).to_a
+
+    end
+
     def self.getItem_withOtherTables(user_id)
 
       query = <<-EOS

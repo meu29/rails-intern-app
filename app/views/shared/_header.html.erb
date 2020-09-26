@@ -1,0 +1,32 @@
+<header>
+  <span>勤怠管理システム</span>
+  <% if login_page == false %>
+    <!-- divでまとめると一行でまとまらない -->
+    <a href="/logout" class="right_content">ログアウト</a>
+    <a href="/message" class="right_content">メッセージ</a>
+    <a href="/period" class="right_content">報告期間選択</a>
+  <% end %>
+</header>
+<!--
+      <div id="changePasswordArea">
+        <%= form_tag("/changePassword", method: :post) do %> 
+          <%= hidden_field_tag "user_id", @user_id %>
+          <p><%= label_tag "新しいパスワードを入力" %><%= text_field_tag "new_password" %></p>
+          <%= submit_tag "パスワードを変更する" %>
+        <% end %>
+      </div>
+-->
+<style>
+    header {
+      color: white;
+      background: teal;
+      margin-bottom: 30px;
+      font-size: 18px;
+      padding: 7px;
+    }
+    a.right_content {
+      font-size: 14px;
+      float: right;
+      margin-left: 10px;
+    }
+</style>

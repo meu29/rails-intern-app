@@ -1,0 +1,93 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <%= render "shared/header", login_page: false %>
+    <main>
+      <div>
+        <div id="user_info">
+          <p>所属メンバー一覧</p>
+          <p>氏名: <%= @user_name %></p>
+          <p>所属: <%= @department_name %></p>
+        </div>  
+      </div>
+        <div>
+          <%= form_tag("/member", method: :post) do %>
+            <%= label_tag "ユーザーIDを入力" %>
+            <%= text_field_tag "user_id" %><br>
+            <%= label_tag "部署名を入力" %>
+            <%= text_field_tag "department_name" %><br>
+            <%= hidden_field_tag "operation", "登録" %>
+            <%= submit_tag "送信" %>
+          <% end %>
+        </div>
+        <table border="1" cellspacing="0" cellpadding="5" bordercolor="#333333">
+          <tr>
+            <th>ユーザーID</th>
+            <th>氏名</th>
+            <th></th>
+          </tr>
+          <% @users.each do |user| %>
+            <tr>
+              <% user.keys.each do |key| %>
+                <td><%= user[key] %></td>
+              <% end %>
+              <%= form_tag("/member", method: :post) do %>
+                <%= hidden_field_tag "user_id", user["user_id"] %>
+                <%= hidden_field_tag "operation", "削除" %>
+                <td><%= submit_tag "所属を解除" %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        </table>
+      </div>
+    </main>
+    <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+      body {
+        background: gainsboro;
+      }
+      main {
+        background: white;
+        padding: 10px;
+      }
+      div#user_info {
+        font-size: 20px; 
+        margin-bottom: 10px; 
+        text-align: center;
+      }
+      table {
+        margin-left: 5%;
+        text-align: center;
+        width: 90%;
+        height: 10px;
+        margin-bottom: 10px;
+      } 
+      table th {
+        padding: 3px;
+        color: white;
+        background: aqua;
+      }
+      table td {
+        padding: 3px;
+      }
+      input[type=submit] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
+        width: 70%;
+      }
+    </style>
+  </body>
+</html>

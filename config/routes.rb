@@ -7,10 +7,13 @@ Rails.application.routes.draw do
   post "/login", to: "users#onPostLogin"
   get "/period", to: "users#onGetPeriod"
   post "/changePassword", to: "users#onPostChangePassword"
+  get "/logout", to: "users#onGetLogout"
   get "/message", to: "messages#onGetMessage"
   get "/getMessages", to: "messages#onGetGetMessages"
   post "/sendMessage", to: "messages#onPostSendMessage"
   get "/users", to: "users#onGetUsers"
+  get "/member", to: "belongs#onGetMember"
+  post "/member", to: "belongs#onPostMember"
   get "/report", to: "reports#onGetReport"
   post "/report", to: "reports#onPostReport"
 end

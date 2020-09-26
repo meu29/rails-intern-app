@@ -28,12 +28,10 @@ class UsersController < ApplicationController
 
     end
 
-    '''提出する場合は使わない
-    def onPostLogout 
+    def onGetLogout 
         Redis.current.del("user_data")
         return redirect_to controller: "users", action: "onGetLogin"
     end
-    '''
 
     def onGetPeriod
 
@@ -77,6 +75,7 @@ class UsersController < ApplicationController
 
     end
 
+    '''
     def onPostChangePassword
 
         user_data = Redis.current.get("user_data")
@@ -91,6 +90,7 @@ class UsersController < ApplicationController
         return redirect_to controller: "users", action: "onGetPeriod"
 
     end
+    '''
 
     def onGetUsers
         
