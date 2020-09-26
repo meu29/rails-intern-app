@@ -2,7 +2,7 @@ railsで勤怠管理アプリを作る
 
 <img src="https://user-images.githubusercontent.com/39718781/94340660-88eae580-003e-11eb-9777-48367aa45bb9.png" width="500">
 
-##やること・メモ
+##やること・メモ<br>
 ・intern_db.dumpをsqlにインポート <br>
  sudo mysql -u newuser -p import先データベース名 < '/home/meu/ドキュメント/RailsInternApp/intern_db.dump' <br>
 ・sudo apt install redis-cli でredisをインストール<br>
