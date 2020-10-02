@@ -1,4 +1,7 @@
 #他のテーブルと結合する処理を書いた際は、一旦サーバーを再起動すると良い?
+#そのテーブルのみ使用 -> def self.(create, get, update, delete)Item(s)
+#他のテーブル一つと結合・比較 -> def self.(create, get, update, delete)Item(s)_withテーブル名
+#他のテーブル二つ以上と結合・比較 -> def self.(create, get, update, delete)Item(s)_withOtherTables
 
 #ActiveRecordも使えるようになる(継承?)
 class User < ApplicationRecord
@@ -16,6 +19,21 @@ class User < ApplicationRecord
         return ActiveRecord::Base.connection.select_all(sql).to_a
     
     end
+
+    def self.getItem_withBelongTable
+      
+      #対応するマネージャーが存在しない(どの部署にも所属していない)社員
+      query =<<-EOS
+        select id, name from users 
+          where not exists (select user_id from belongs 
+            where belongs.user_id = users.id)
+      EOS
+
+      sql = ActiveRecord::Base.sanitize_sql_array([query])
+      
+      return ActiveRecord::Base.connection.select_all(sql).to_a
+
+  end
 
     #一般社員一覧を取得
     def self.getItems_withOhterTables(manager_user_id, period, state, start_index = 1)

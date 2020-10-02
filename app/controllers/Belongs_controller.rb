@@ -14,7 +14,8 @@ class BelongsController < ApplicationController
 
         @user_name = user_data["user_name"]
         @department_name = user_data["department_name"]
-        @users = Belong.getItems(user_data["user_id"])
+        @users = Belong.getItems_withUsersTable(user_data["user_id"])
+        @test = User.getItem_withBelongTable()
 
         render "member"
 
@@ -39,10 +40,11 @@ class BelongsController < ApplicationController
 
         @user_name = user_data["user_name"]
         @department_name = user_data["department_name"]
-        @users = Belong.getItems(user_data["user_id"])
+        @users = Belong.getItems_withUsersTable(user_data["user_id"])
 
         render "member"
 
     end
+
 
 end

@@ -1,0 +1,118 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  </head>
+  <body>
+    <%= render "shared/header", login_page: false %>
+    <main>
+      <div id="user_info">
+        <p>無所属社員一覧</p>
+        <p>氏名: <%= @user_name %></p>
+        <p>所属: <%= @department_name %></p>
+      </div>  
+      <div id="app">
+    </main>
+    <script type="text/babel">
+
+      class AppComponent extends React.Component {
+
+        constructor(props) {
+          super(props);
+          this.getUsers = this.getUsers.bind(this);
+          this.state = {"users":[{"id": "H185100002", "name": "田中"}]}; //JSON.parse(this.tmp_json.split(/\s+/).join(""));
+        }
+
+　　　　//DimMountは間違い
+        componentDidMount() {
+          this.getUsers();
+        }
+
+        getUsers() {
+          fetch("/independentUsers")
+          .then()
+        }
+
+        render() {
+          //thisのmapの中でthisを使うとundefinedになる
+          var getUsersFunc = this.getUsers;
+          return(
+            <table border="1" cellSpacing="0" cellPadding="5" bordercolor="#333333">
+              <thead>
+                <tr>
+                  <th>ユーザーID</th>
+                  <th>氏名</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+              {this.state.users.map(function(user) {
+                return(
+                  <tr>
+                    <td>{user.id}</td>
+                    <td>{user.name}</td>
+                    <td><input type="button" value="営業部に追加" onClick={getUsersFunc} /></td>
+                  </tr>
+                )
+              })}
+              </tbody>
+              
+            </table>
+          );
+        }
+
+      }
+    
+      ReactDOM.render(<AppComponent />, document.getElementById("app"));
+    
+    </script>
+    <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+      body {
+        background: gainsboro;
+      }
+      main {
+        background: white;
+        padding: 10px;
+      }
+      div#user_info {
+        font-size: 20px; 
+        margin-bottom: 10px; 
+        text-align: center;
+      }
+      table {
+        margin-left: 5%;
+        text-align: center;
+        width: 90%;
+        height: 10px;
+        margin-bottom: 10px;
+      } 
+      table th {
+        padding: 3px;
+        color: white;
+        background: aqua;
+      }
+      table td {
+        padding: 3px;
+      }
+      input[type=submit] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        margin-right: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
+        width: 70%;
+      }
+    </style>
+  </body>
+</html>

@@ -121,4 +121,32 @@ class UsersController < ApplicationController
 
     end
 
+    def onGetInvite
+
+        user_data = Redis.current.get("user_data")
+
+        if user_data == nil 
+            return redirect_to controller: "users", action: "onGetLogin"
+        end
+
+        user_data = JSON.parse(user_data)
+
+        @user_name = user_data["user_name"]
+        @department_name = user_data["department_name"]
+
+        render "invite"
+
+    end
+
+    def onPostInvite
+
+    end
+
+    #fetch専用'
+    '''
+    def onGetIndependentUsers
+        render :json {"users"=>User.getItem_withBelongTable()}
+    end
+    '''
+
 end

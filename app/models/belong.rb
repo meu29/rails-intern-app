@@ -9,7 +9,7 @@ class Belong < ApplicationRecord
 
     end
 
-    def self.getItems(manager_user_id)
+    def self.getItems_withUsersTable(manager_user_id)
 
         query =<<-EOS 
             select belongs.user_id, users.name from belongs

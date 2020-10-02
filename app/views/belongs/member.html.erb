@@ -13,7 +13,7 @@
           <p>所属: <%= @department_name %></p>
         </div>  
       </div>
-        <div>
+        <!--div>
           <%= form_tag("/member", method: :post) do %>
             <%= label_tag "ユーザーIDを入力" %>
             <%= text_field_tag "user_id" %><br>
@@ -22,7 +22,7 @@
             <%= hidden_field_tag "operation", "登録" %>
             <%= submit_tag "送信" %>
           <% end %>
-        </div>
+        </div-->
         <table border="1" cellspacing="0" cellpadding="5" bordercolor="#333333">
           <tr>
             <th>ユーザーID</th>
@@ -42,6 +42,9 @@
             </tr>
           <% end %>
         </table>
+        <div id="link_area">
+          <a href="/invite">メンバーを招待する</a>
+        </div>
       </div>
     </main>
     <style>
@@ -87,6 +90,9 @@
         font-weight: bold;
         padding: 3px;
         width: 70%;
+      }
+      div#link_area {
+        text-align: center;
       }
     </style>
   </body>
