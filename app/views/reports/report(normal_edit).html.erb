@@ -88,7 +88,7 @@
 
         for (var i = 0; i <= start_time_array.length - 1; i++) {
           //形式が正しくなかった時点でチェックが停止(修正後にまたチェックするので一度に全てを検査する必要はない)
-          if (checkTimeFormat(start_time_array[i].value) == true && checkTimeFormat(finish_time_array[i].value) == true && break_time_array[i].value.match(/[^0-9]/) == null) {
+          if (checkTimeFormat(start_time_array[i].value) == true && checkTimeFormat(finish_time_array[i].value) == true && break_time_array[i].value.match(/[^0-9]/) == null && break_time_array[i].value.length != 0) {
             document.getElementsByClassName("table_rows")[i].style.background = "white";
           } else {
             document.getElementsByClassName("table_rows")[i].style.background = "red";

@@ -1,10 +1,23 @@
 class Department < ApplicationRecord
 
+    def self.createItem(name, id)
+
+    end
+
     def self.getItem(name)
 
       query = "select id from departments where name = (:name)"
 
       sql = ActiveRecord::Base.sanitize_sql_array([query, name: name])
+      return ActiveRecord::Base.connection.select_all(sql).to_a
+
+    end
+
+    def self.getItems
+
+      query = "select * from departments"
+      sql = ActiveRecord::Base.sanitize_sql_array([query])
+
       return ActiveRecord::Base.connection.select_all(sql).to_a
 
     end

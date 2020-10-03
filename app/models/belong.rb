@@ -9,6 +9,18 @@ class Belong < ApplicationRecord
 
     end
 
+    def self.getItem(department_id)
+
+        query =<<-EOS
+          select user_id, manager_user_id from belongs
+            where department_id = (:department_id)
+        EOS
+
+        sql = sql = ActiveRecord::Base.sanitize_sql_array([query, department_id: department_id])
+        return ActiveRecord::Base.connection.select_all(sql).to_a
+
+    end
+
     def self.getItems_withUsersTable(manager_user_id)
 
         query =<<-EOS 

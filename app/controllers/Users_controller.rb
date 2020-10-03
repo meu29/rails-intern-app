@@ -21,6 +21,9 @@ class UsersController < ApplicationController
         if user_data == nil
             @message = "ユーザーIDかパスワードが間違っています"
             render "login"
+        elsif user_data["user_name"] == "admin"
+            Redis.current.set("user_data", user_data.to_json)
+            redirect_to controller: "users", action: "onGetAdministrator_only"
         else
             Redis.current.set("user_data", user_data.to_json) 
             return redirect_to controller: "users", action: "onGetPeriod"
@@ -148,5 +151,44 @@ class UsersController < ApplicationController
         render :json {"users"=>User.getItem_withBelongTable()}
     end
     '''
+
+    def onGetAdministrator_only
+
+        user_data = Redis.current.get("user_data")
+
+        if user_data == nil 
+            return redirect_to controller: "users", action: "onGetLogin"
+        elsif JSON.parse(user_data)["user_name"] != "admin"
+            redirect_to controller: "users", action: "onGetPeriod"
+        end
+
+        departments = Department.getItems()
+        
+        (0..departments.size - 1).each do |i|
+            department = departments[i]
+            departments[i] = [department["name"], department["id"]]
+        end
+
+        @departments = departments
+
+        render "administrator_only"
+
+    end
+
+    def onPostCreateUser
+
+        department_id = params[:department_id]
+        values = Belong.getItem(department_id)
+
+        latest_user_id = values[values.size - 1]["user_id"]
+        user_id = latest_user_id[1..latest_user_id.size].to_i + 1
+        user_id = latest_user_id[0] + user_id.to_s
+
+        User.createItem(user_id, params[:user_name])
+        Belong.createItem(user_id, values[values.size - 1]["manager_user_id"], department_id)
+        
+        redirect_to controller: "users", action: "onGetAdministrator_only"
+
+    end
 
 end

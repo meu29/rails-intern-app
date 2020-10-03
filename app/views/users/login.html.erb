@@ -9,7 +9,7 @@
       <div id="form_area">
         <form action="/login" method="post">
           <p><input name="user_id" type="text" placeholder="ユーザーID"></p>
-          <p><input name="password" type="text" placeholder="パスワード"></p>
+          <p><input name="password" type="password" placeholder="パスワード"></p>
           <input type="submit" value="ログイン">
         </form>
       </div>
@@ -32,6 +32,9 @@
         padding: 10px;
       }
       input[type=text] {
+        font-size: 20px;
+      }
+      input[type=password] {
         font-size: 20px;
       }
       input[type=submit] {

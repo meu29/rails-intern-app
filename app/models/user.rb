@@ -6,6 +6,14 @@
 #ActiveRecordも使えるようになる(継承?)
 class User < ApplicationRecord
 
+    def self.createItem(user_id, user_name)
+
+      query = "insert into users (id, name, password) values (:id, :name, 'password')"
+      sql = sql = ActiveRecord::Base.sanitize_sql_array([query, id: user_id, name: user_name])
+      ActiveRecord::Base.connection.execute(sql)
+     
+    end
+
     #self付きがクラスメソッド、付いてないのがインスタンスメソッド
     def self.getItem(user_id, password)
         

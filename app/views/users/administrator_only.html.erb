@@ -1,0 +1,70 @@
+<!DOCTYPE html5>
+<html>
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <header>
+      <span>勤怠管理システム(管理者専用)</span>
+      <a href="/logout" class="right_content">ログアウト</a>
+    </header>
+    <main>
+      <div class="form_area"><!-- ユーザー追加 -->
+      　<p>ユーザーを作成</p>
+        <%= form_tag("/createUser", method: :post) do %>
+          <p><%= label_tag "社員氏名" %><%= text_field_tag "user_name" %></p>
+          <p><%= label_tag "所属部署" %><%= select_tag "department_id", options_for_select(@departments) %></p>
+          <%= submit_tag "ユーザーを追加する" %>
+        <% end %>
+      </div>
+      <div class="form_area"></div><!-- 部署追加 -->
+    </main>
+  </body>
+  <style>
+      * {
+        margin: 0%;
+        padding: 0%;
+      }
+      body {
+        background: gainsboro;
+      }
+      header {
+        color: white;
+        background: red;
+        margin-bottom: 30px;
+        font-size: 18px;
+        padding: 7px;
+      }
+      a.right_content {
+        font-size: 14px;
+        float: right;
+        margin-left: 10px;
+      }
+      main {
+        background: white;
+        padding: 10px;
+      }
+      div.form_area {
+        font-size: 20px;
+        margin-left: 40%;
+        /*text-align: center;*/
+      }
+      form {
+        margin-top: 30px;
+      }
+      select {
+        font-size: 18px;
+        margin-bottom: 30px;
+      }
+      input[type=submit] {
+        color: white;
+        background: cornflowerblue;
+        border-radius: 5px;
+        border: none;
+        margin-left: 3px;
+        font-size: 15px;
+        font-weight: bold;
+        padding: 3px;
+      }
+    </style>
+</html>
